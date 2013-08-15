@@ -2,8 +2,12 @@
 .idea
 *.iml
 out
+.classpath
+.project
+.settings
 
 # Package Files #
 *.jar
 *.war
 *.ear
+build

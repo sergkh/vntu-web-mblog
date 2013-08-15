@@ -3,6 +3,7 @@
     height: 60%;
     min-width: 400px;
     max-width: 500px;
+    min-height: 400px;
     overflow: auto;
     margin: auto;
     position: absolute;
