@@ -16,13 +16,10 @@ import java.util.logging.Logger;
  */
 @WebServlet(value = "")
 public class HomeServlet extends HttpServlet {
-
-    private Logger log = Logger.getLogger(HomeServlet.class.getName());
-
+	
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        log.info("Rendering login page");
-        RequestDispatcher view = request.getRequestDispatcher("WEB-INF/jsp/login.jsp");
+    	getServletContext().log("Rendering users page");
+        RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
         view.forward(request, response);
     }
 }
