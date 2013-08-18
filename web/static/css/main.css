@@ -1,9 +1,6 @@
-.abs-center {
-    width: 60%;
-    height: 60%;
-    min-width: 400px;
-    max-width: 500px;
-    min-height: 400px;
+.centered-login {
+    height: 400px;
+    width: 260px;
     overflow: auto;
     margin: auto;
     position: absolute;
