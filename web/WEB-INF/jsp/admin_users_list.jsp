@@ -61,27 +61,27 @@
 				          	</td>
 				        </tr>
 				        <tr>
-				          <td>ash11927@gmail.com</td>
-				          <td>2010/08/21</td>
-				          <td>2013/08/21</td>
-				          <td>
-				            <button type="button" class="btn btn-success btn-mini"><i class="icon-remove"></i> Заблокувати</button>
-				          </td>
-				          <td>
-				            <button type="button" class="btn btn-warning btn-mini"><i class="icon-fire"></i> З модераторів</button>
-				          </td>
-				         </tr>
-				         <tr>
-				          <td>audann84@gmail.com</td>
-				          <td>2011/12/01</td>
-				          <td>2013/12/01</td>
-				          <td>
-				            <button type="button" class="btn btn-danger btn-mini"><i class="icon-ok"></i> Розблокувати</button>
-				          </td>
-				          <td>
-				            <button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button>
-				          </td>
-				         </tr>
+				        	<td>ash11927@gmail.com</td>
+				        	<td>2010/08/21</td>
+				        	<td>2013/08/21</td>
+				        	<td>
+				            	<button type="button" class="btn btn-success btn-mini"><i class="icon-remove"></i> Заблокувати</button>
+				          	</td>
+				          	<td>
+				            	<button type="button" class="btn btn-warning btn-mini"><i class="icon-fire"></i> З модераторів</button>
+				          	</td>
+				       	</tr>
+				        <tr>
+				        	<td>audann84@gmail.com</td>
+				        	<td>2011/12/01</td>
+				        	<td>2013/12/01</td>
+				        	<td>
+				            	<button type="button" class="btn btn-danger btn-mini"><i class="icon-ok"></i> Розблокувати</button>
+				          	</td>
+				          	<td>
+				            	<button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button>
+				          	</td>
+				        </tr>
 				    </tbody>
 				</table>
 			</div>
