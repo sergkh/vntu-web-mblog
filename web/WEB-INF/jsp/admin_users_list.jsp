@@ -10,7 +10,7 @@
                     <th>Пошта</th>
                     <th>Дата реєстрації</th>
                     <th>Дата блокування</th>
-                    <th style="width: 140px;"></th>
+                    <th style="width: 120px;"></th>
                 </tr>
             </thead>
 

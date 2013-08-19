@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="includes/header.jsp" %>
 
-<div class="centered-login">
+<div class="centered-login" style="padding-top: 15%;  ">
 	    <ul class="nav nav-pills" id="login-or-register">
 	    	<li class="active"><a href="#login" data-toggle="tab">Авторизація</a></li>
 	        <li class="pull-right"><a href="#register" data-toggle="tab">Реєстрація</a></li>
@@ -72,7 +72,7 @@
 	            </form>
 			</div>
             
-		
+		</div>
 </div>
 
 <%@include file="includes/footer.jsp" %>
