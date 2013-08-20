@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="includes/header.jsp" %>
 
-<div class="centered-login" style="padding-top: 15%;  ">
+<div class="centered-login">
 	    <ul class="nav nav-pills" id="login-or-register">
 	    	<li class="active"><a href="#login" data-toggle="tab">Авторизація</a></li>
 	        <li class="pull-right"><a href="#register" data-toggle="tab">Реєстрація</a></li>
@@ -37,13 +37,13 @@
             
             <div class="tab-pane fade" id="register">
 	            <!-- Registration -->
-	            <form action="" method="POST">
+	            <form action="register" method="POST">
                     <div class="control-group">
                         <!-- Username -->
                         <label class="control-label" for="register-login">Логін</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-user"></i></span>
-                            <input id="register-login" name="register-login" placeholder="user123" class="input-large" required="" type="text">
+                            <input id="register-login" name="login" placeholder="user123" class="input-large" required="" type="text">
                             <p id="register-login-error" class="error-block"></p>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <label class="control-label" for="register-email">Електронна пошта</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input id="register-email" name="register-email" placeholder="user@mail.com" class="input-large" required="" type="text">
+                            <input id="register-email" name="email" placeholder="user@mail.com" class="input-large" required="" type="text">
                             <p id="register-email-error" class="error-block"></p>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                         <label class="control-label" for="session-login">Пароль</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-lock"></i></span>
-                            <input id="register-password" name="register-password" placeholder="********" class="input-large" required="" type="text">
+                            <input id="register-password" name="password" placeholder="********" class="input-large" required="" type="password">
                             <p id="register-password-error" class="error-block"></p>
                         </div>
                     </div>

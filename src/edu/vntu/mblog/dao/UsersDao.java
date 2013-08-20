@@ -11,7 +11,7 @@ public class UsersDao extends AbstractDao {
 	public UsersDao() {}
 	
 	 public void create(User user) {
-		String sql = "inser into users (login, email, passhash) VALUES (?,?,?)";
+		String sql = "insert into users (login, email, passhash) VALUES (?,?,?)";
 		Connection con = getConnection();
 		PreparedStatement createSt = null;
 		try {

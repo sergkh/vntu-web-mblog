@@ -1,18 +1,28 @@
 package edu.vntu.mblog.domain;
 
 import java.util.Date;
+import java.util.EnumSet;
 
 public class User {
+	
+	public enum Roles {
+		USER, ADMIN, MODERATOR;
+	}
+	
 	private long id;
 	private Date creationDate;
 	private String login;
 	private String email;
 	private String passHash;
 	private Date blockDate;
-
+	private EnumSet<Roles> roles;
+	
+	public User(String login, String email, String passHash) {
+		this(0L, null, login, email, passHash, null);
+	}
+	
 	public User(long id, Date creationDate, String login, String email,
 			String passHash, Date blockDate) {
-		super();
 		this.id = id;
 		this.creationDate = creationDate;
 		this.login = login;
@@ -65,6 +75,14 @@ public class User {
 	
 	public void setBlockDate(Date blockDate) {
 		this.blockDate = blockDate;
+	}
+
+	public EnumSet<Roles> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(EnumSet<Roles> roles) {
+		this.roles = roles;
 	}
 	
 }
