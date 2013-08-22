@@ -4,17 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.EnumSet;
 
 import edu.vntu.mblog.domain.Post;
-import edu.vntu.mblog.domain.User;
-import edu.vntu.mblog.domain.User.Roles;
 
 public class UserPostsDao extends AbstractDao {
 	public UserPostsDao() {}
 	
-	//savePost(Post user) Б ад Х Post getPost(long id)
+	//savePost(Post user) Post getPost(long id)
 	
 	public void savePost(Post userPost) {
 		String sql = "insert into posts (owner_id, text) VALUES (?,?)";

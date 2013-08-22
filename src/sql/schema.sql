@@ -9,14 +9,14 @@ CREATE TABLE users (
     UNIQUE(login)
 );
 
-CREATE TABLE roles (
-    id serial PRIMARY KEY,
+CREATE TABLE permissions (
+    id smallint PRIMARY KEY,
     name character varying(255)
 );
 
-CREATE TABLE user_roles (
+CREATE TABLE user_permissions (
     user_id bigint,
-    role_id integer
+    perm_id smallint
 );
 
 CREATE TABLE posts (
@@ -32,8 +32,8 @@ CREATE TABLE user_followers (
   PRIMARY KEY(subscriber_id, followed_id)
 );
 
-ALTER TABLE user_roles ADD CONSTRAINT fk_user_roles_users FOREIGN KEY (user_id) REFERENCES users(id);
-ALTER TABLE user_roles ADD CONSTRAINT fk_user_roles_roles FOREIGN KEY (role_id) REFERENCES roles(id);
+ALTER TABLE user_permissions ADD CONSTRAINT fk_user_permissions_users FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE user_permissions ADD CONSTRAINT fk_user_permissions_permissions FOREIGN KEY (perm_id) REFERENCES permissions(id);
 
 ALTER TABLE posts ADD CONSTRAINT fk_posts_owner FOREIGN KEY (owner_id) REFERENCES users(id);
 
@@ -42,3 +42,20 @@ ALTER TABLE user_followers ADD CONSTRAINT fk_followers_follower FOREIGN KEY (fol
 
 CREATE INDEX idx_posts_owner_id ON posts (owner_id);
 CREATE INDEX idx_posts_stamp ON posts (stamp);
+
+INSERT INTO permissions VALUES (1, 'USER');
+INSERT INTO permissions VALUES (2, 'MODERATE_POSTS');
+INSERT INTO permissions VALUES (3, 'MANAGE_USERS');
+
+INSERT INTO users (login,email,passhash) VALUES ('admin', 'admin@mail.com', 'd033e22ae348aeb5660fc2140aec35850c4da997');
+INSERT INTO users (login,email,passhash) VALUES ('tester', 'tester@mail.com', 'ab4d8d2a5f480a137067da17100271cd176607a1');
+INSERT INTO users (login,email,passhash) VALUES ('user', 'user@mail.com', '12dea96fec20593566ab75692c9949596833adc9');
+INSERT INTO users (login,email,passhash,blocked) VALUES ('<h1>hacker</h1>', 'hacker@mail.ru', '12dea96fec20593566ab75692c9949596833adc9', NOW());
+
+INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='admin', 1);
+INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='admin', 2);
+INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='admin', 3);
+
+INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='tester', 1);
+INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='user', 1);
+INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='<h1>hacker</h1>', 1);

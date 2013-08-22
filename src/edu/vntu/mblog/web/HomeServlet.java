@@ -15,8 +15,10 @@ import java.io.IOException;
  */
 @WebServlet(value = "")
 public class HomeServlet extends HttpServlet {
-	
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	private static final long serialVersionUID = 4289764775386171808L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	getServletContext().log("Rendering users page");
         RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
         view.forward(request, response);
