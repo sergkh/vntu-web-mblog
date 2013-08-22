@@ -23,7 +23,7 @@ public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7828326412316643125L;
 
-	private final UsersService usersService = new UsersService();
+	private final UsersService usersService = UsersService.getInstance();
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("login");

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.UsersService;
 
 /**
@@ -20,12 +21,16 @@ public class AdminServlet extends HttpServlet {
     
 	private static final int USERS_LIMIT = 100;
 	
-	private final UsersService usersService = new UsersService();
+	private final UsersService usersService = UsersService.getInstance();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	getServletContext().log("Rendering admin page");
     	
-		request.setAttribute("users", usersService.getUsersList(0, USERS_LIMIT));
+		try {
+			request.setAttribute("users", usersService.getUsersList(0, USERS_LIMIT));
+		} catch (ValidationException e) {
+			e.printStackTrace();
+		}
     	
         RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/admin_users_list.jsp");
         view.forward(request, response);

@@ -19,13 +19,13 @@ public class ValidationUtils {
     						"com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$");
     
 	
-	public static void validateLen(String fieldName, String value, int min, int max) {
+	public static void validateLen(String fieldName, String value, int min, int max) throws ValidationException {
 		if(!checkLen(value, min, max)) 
 			throw new ValidationException(fieldName, "Length has to be from " + min + " to " + max + " characters");
 			
 	}
 	
-	public static void validateEmail(String fieldName, String email) {
+	public static void validateEmail(String fieldName, String email) throws ValidationException {
 		if(!checkEmail(email)) 
 			throw new ValidationException(fieldName, "Is not a valid email");
 	}

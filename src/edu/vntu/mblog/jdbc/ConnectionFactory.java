@@ -23,25 +23,44 @@ import javax.sql.DataSource;
  * @author Sergey Khruschak (sergey.khruschak@gmail.com)
  */
 public class ConnectionFactory {
-	private static DataSource dataSource = null;
 	
-    public static synchronized Connection createConnection() {
-        try {
-        	if(dataSource == null) {
-            	InitialContext ic = new InitialContext();
-            	Context xmlContext = (Context) ic.lookup("java:comp/env");
-                dataSource = (DataSource) xmlContext.lookup("jdbc/dataSource");
-                initDatabase(dataSource.getConnection());
-        	}
+	private static final ConnectionFactory instance = new ConnectionFactory(); 
+	
+	private DataSource dataSource = null;
 
+	private ConnectionFactory() {
+		try {
+	    	InitialContext ic = new InitialContext();
+	    	Context xmlContext = (Context) ic.lookup("java:comp/env");
+	        dataSource = (DataSource) xmlContext.lookup("jdbc/dataSource");
+	        initDatabase(dataSource.getConnection());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+	}
+	
+	public static ConnectionFactory getInstance() {
+		return instance;
+	}
+	
+    public Connection getConnection() {
+        try {
             return dataSource.getConnection();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
     
+    public void startTransaction() {
+    	
+    }
     
-    public static void initDatabase(Connection con) throws IOException, SQLException {
+    public void commitTransaction() {
+    	
+    }
+    
+    private static void initDatabase(Connection con) throws IOException, SQLException {
     	String script = readScript("/sql/schema.sql");
     	
         Statement st = con.createStatement();

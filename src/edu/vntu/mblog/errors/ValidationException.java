@@ -7,21 +7,17 @@ package edu.vntu.mblog.errors;
  * 
  * @author sergey
  */
-public class ValidationException extends RuntimeException {
+public class ValidationException extends Exception {
+	private static final long serialVersionUID = 8074360044012276675L;
 	
 	private final String fieldName;
-	private final String error;
 	
-	public ValidationException(String fldName, String error) {
+	public ValidationException(String fldName, String message) {
+		super(message);
 		this.fieldName = fldName;
-		this.error = error;
 	}
 
 	public String getFieldName() {
 		return fieldName;
-	}
-
-	public String getError() {
-		return error;
 	}
 }

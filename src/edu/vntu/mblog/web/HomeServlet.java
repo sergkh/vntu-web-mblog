@@ -6,6 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 
 /**
@@ -20,7 +22,17 @@ public class HomeServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	getServletContext().log("Rendering users page");
-        RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
-        view.forward(request, response);
+    	
+    	HttpSession s = request.getSession(false);
+		
+    	if(s != null) {
+			// redirect to users page
+			response.sendRedirect(request.getContextPath() + "/users/" + s.getAttribute("login"));
+		} else {
+			// no user session found - show login/register page
+	        RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+	        view.forward(request, response);
+		}
+    	
     }
 }

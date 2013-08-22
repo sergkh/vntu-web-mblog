@@ -11,14 +11,16 @@
                 
 			<div class="tab-pane active in" id="login">
                 <!-- Login -->
-	            <form action="" method="POST">
+	            <form action="${pageContext.request.contextPath}/login" method="POST">
+	            
+	            	<div id="session-password-error" class="text-error text-center">${param.error}</div>
+	            
                     <div class="control-group">
                         <!-- Username -->
                         <label class="control-label" for="session-login">Логін</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-user"></i></span>
                             <input id="session-login" name="session-login" placeholder="логін чи пошта" class="input-large" required="" type="text">
-                            <p id="session-login-error" class="error-block"></p>
                         </div>
                     </div>
                     <div class="control-group">
@@ -26,8 +28,7 @@
                         <label class="control-label" for="session-password">Пароль</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-lock"></i></span>
-                            <input id="session-password" name="session-password" placeholder="*******" class="input-large" required="" type="password">
-                            <p id="session-password-error" class="error-block"></p>
+                            <input id="session-password" name="session-password" class="input-large" required="" type="password">
                         </div>
                     </div>
 
@@ -37,7 +38,7 @@
             
             <div class="tab-pane fade" id="register">
 	            <!-- Registration -->
-	            <form action="register" method="POST">
+	            <form action="${pageContext.request.contextPath}/register" method="POST">
                     <div class="control-group">
                         <!-- Username -->
                         <label class="control-label" for="register-login">Логін</label>
