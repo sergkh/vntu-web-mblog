@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.vntu.mblog.domain.Post;
 
@@ -44,25 +46,13 @@ public class UserPostsDao extends AbstractDao {
 			throw new RuntimeException(e);
 		} 
 	 }
-	 
-	 private Post convert(ResultSet rs) throws SQLException {
-		 return new Post(
-				 rs.getLong("id"),
-				 rs.getLong("owner_id"),
-				 rs.getString("text"),
-				 rs.getTimestamp("stamp")
-		 );
-	 }
-	 
-	 public Post getAllUserAndFollowersPosts(long userId) {
+	 	 
+	 public List<Post> getFeed(long userId, int limit, int offset) {
 			String sql = "select users.login, posts.text from users, posts where users.id=posts.owner_id "
 					+ "in (?, select followed_id from users_followers where subscriber_id=?) "
 					+ "order by posts.stamp desc limit=? offset=?";
 		
 			Connection con = getConnection();
-			
-			int limit=0;
-			int offset=0;
 
 			try (PreparedStatement getSt = con.prepareStatement(sql)) {
 				getSt.setLong(1, userId);
@@ -72,14 +62,24 @@ public class UserPostsDao extends AbstractDao {
 				
 				ResultSet results = getSt.executeQuery();
 
-				if (!results.next()) 
-					return null;
+				List<Post> posts = new ArrayList<>();
 				
-				return convert(results);   //?????????????????????????
+				while (results.next()) {
+					posts.add(convert(results));
+				} 
+					
+				return posts;
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
 		 }
 	 
-
+	 private Post convert(ResultSet rs) throws SQLException {
+		 return new Post(
+				 rs.getLong("id"),
+				 rs.getLong("owner_id"),
+				 rs.getString("text"),
+				 rs.getTimestamp("stamp")
+		 );
+	 }
 }
