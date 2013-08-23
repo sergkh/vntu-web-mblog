@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.ValidationException;
@@ -22,7 +23,7 @@ public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7828326412316643125L;
 
-	private final UsersService usersService = new UsersService();
+	private final UsersService usersService = UsersService.getInstance();
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("login");
@@ -32,9 +33,11 @@ public class RegisterServlet extends HttpServlet {
 		try {
 			User user = usersService.register(login, email, password);
 			
-			request.getSession().setAttribute("login", login);
-			request.getSession().setAttribute("email", email);
-			request.getSession().setAttribute("roles", user.getRoles());
+			HttpSession s = request.getSession(); 
+			
+			s.setAttribute("login", login);
+			s.setAttribute("email", email);
+			s.setAttribute("roles", user.getPermissions());
 			
 			response.sendRedirect(request.getContextPath() + "/users/"+ login);
 		} catch (ValidationException ve) {

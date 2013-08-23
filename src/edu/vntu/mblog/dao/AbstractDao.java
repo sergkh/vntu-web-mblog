@@ -10,7 +10,7 @@ import edu.vntu.mblog.jdbc.ConnectionFactory;
 public class AbstractDao {
 	
 	protected Connection getConnection() {
-		return ConnectionFactory.createConnection();
+		return ConnectionFactory.getInstance().getConnection();
 	}
 	
 	protected void close(AutoCloseable... closeables) {

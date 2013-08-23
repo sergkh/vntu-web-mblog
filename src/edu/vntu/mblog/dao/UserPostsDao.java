@@ -92,6 +92,6 @@ public class UserPostsDao extends AbstractDao {
 				close(results, getSt, con);
 			}
 		 }
-
+	 
 
 }

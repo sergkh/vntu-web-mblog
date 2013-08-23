@@ -5,8 +5,8 @@ import java.util.EnumSet;
 
 public class User {
 	
-	public enum Roles {
-		USER, ADMIN, MODERATOR;
+	public enum Permission {
+		USER, MODERATE_POSTS, MANAGE_USERS;
 	}
 	
 	private long id;
@@ -15,7 +15,7 @@ public class User {
 	private String email;
 	private String passHash;
 	private Date blockDate;
-	private EnumSet<Roles> roles;
+	private EnumSet<Permission> permissions;
 	
 	public User(String login, String email, String passHash) {
 		this(0L, null, login, email, passHash, null);
@@ -77,12 +77,12 @@ public class User {
 		this.blockDate = blockDate;
 	}
 
-	public EnumSet<Roles> getRoles() {
-		return roles;
+	public EnumSet<Permission> getPermissions() {
+		return permissions;
 	}
 
-	public void setRoles(EnumSet<Roles> roles) {
-		this.roles = roles;
+	public void setPermissions(EnumSet<Permission> permissions) {
+		this.permissions = permissions;
 	}
 	
 }

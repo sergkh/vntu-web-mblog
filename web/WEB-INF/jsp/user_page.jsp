@@ -2,6 +2,7 @@
 <%@include file="includes/header.jsp" %>
 <%@include file="includes/navigation.jsp" %>
 
+<!-- User information -->
 <div class="container">
 	<div class="row-fluid">
 		<div class="span12 well">
@@ -20,8 +21,19 @@
 		</div>
 	</div>
  	
+ 	<!-- Post a message -->
+ 	<div class="row-fluid">
+ 		
+ 		<form id="post-message-form" action="/messages/" method="post">
+ 			<fieldset>
+				<textarea class="input-block-level" rows="3" placeholder="Напишіть повідомлення..."></textarea>
+ 				
+ 				<button type="submit" class="btn">Написати</button>
+ 			</fieldset>
+ 		</form>
+ 	</div>
  	
- 	
+ 	<!-- Message feed -->
 	<div class="row-fluid">
 	    <div class="row-fluid">
 	    	<div class="span1 text-center">
@@ -32,7 +44,7 @@
 			    'I never said I didn't!' interrupted Alice.
 			    'You did,' said the Mock Turtle.
 		    </div>
-		    <div class="span2 text-center">
+		    <div class="span2 timebadge">
 		    	<span class="badge pull-right"><i class="icon-time"></i> 2012-08-02 20:47:04</span>
 		    </div>
     	    
@@ -45,7 +57,7 @@
   		    <div class="span9">
   		    	I am bound to Tahiti for more men
 			</div>
-		    <div class="span2 text-center">
+		    <div class="span2 timebadge">
 		    	<span class="badge pull-right"><i class="icon-time"></i> 2012-08-02 20:47:04</span>
 		    </div>
 		    
@@ -58,7 +70,7 @@
   		    <div class="span9">
   		    	Very good. Let me board you a moment—I come in peace.
   		    </div>
-	    	<div class="span2 text-center">
+	    	<div class="span2 timebadge">
 		    	<span class="badge pull-right"><i class="icon-time"></i> 2012-08-02 20:47:04</span>
 		    </div>
 	    	
@@ -67,8 +79,6 @@
 		<hr/>
 	    
 	</div><!-- .row -->
-	
-	<div class="row-fluid"> Footer </div>
 	
 </div><!-- .container -->
 
