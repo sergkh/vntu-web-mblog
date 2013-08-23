@@ -63,5 +63,35 @@ public class UserPostsDao extends AbstractDao {
 				 rs.getTimestamp("stamp")
 		 );
 	 }
+	 
+	 public Post getAllUserAndFollowersPosts(long userId) {
+			String sql = "select users.login, posts.text from users, posts where users.id=posts.owner_id "
+					+ "in (?, select followed_id from users_followers where subscriber_id=?) "
+					+ "order by posts.stamp desc limit=? offset=?";
+			Connection con = getConnection();
+			PreparedStatement getSt = null;
+			ResultSet results = null;
+			int limit=0;
+			int offset=0;
+			try {
+				getSt = con.prepareStatement(sql);
+				getSt.setLong(1, userId);
+				getSt.setLong(2, userId);
+				getSt.setInt(3, limit);
+				getSt.setInt(4, offset);
+				
+				results = getSt.executeQuery();
+
+				if (!results.next()) 
+					return null;
+				
+				return convert(results);   //?????????????????????????
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			} finally {
+				close(results, getSt, con);
+			}
+		 }
+
 
 }
