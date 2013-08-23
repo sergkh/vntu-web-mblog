@@ -16,9 +16,9 @@ public class UsersDao extends AbstractDao {
 	
 	 public void create(User user) {
 		String sql = "INSERT into USERS (login, email, passhash) VALUES (?,?,?)";
+		Connection con = getConnection();
 		
-		try (Connection con = getConnection();
-			 PreparedStatement createSt = con.prepareStatement(sql)) {
+		try (PreparedStatement createSt = con.prepareStatement(sql)) {
 			
 			createSt.setString(1, user.getLogin());
 			createSt.setString(2, user.getEmail());
@@ -40,9 +40,9 @@ public class UsersDao extends AbstractDao {
 	public void addPermission(long userId, User.Permission role) {
 		String sql = "INSERT INTO user_permissions VALUES (?, SELECT id FROM permissions WHERE name=?)";
 		
-		try (Connection con = getConnection();
-			PreparedStatement createSt = con.prepareStatement(sql)) {
-			
+		Connection con = getConnection();
+		
+		try (PreparedStatement createSt = con.prepareStatement(sql)) {
 			createSt.setLong(1, userId);
 			createSt.setString(2, role.name());
 			createSt.executeUpdate();
@@ -53,9 +53,9 @@ public class UsersDao extends AbstractDao {
 	 
 	 public User getByLoginOrEmail(String identifier) {
 		String sql = "SELECT * FROM users WHERE login=? OR email=?";
+		Connection con = getConnection();
 		
-		try (Connection con = getConnection();
-			 PreparedStatement getSt = con.prepareStatement(sql)) {
+		try (PreparedStatement getSt = con.prepareStatement(sql)) {
 			
 			getSt.setString(1, identifier);
 			getSt.setString(2, identifier);
@@ -73,9 +73,10 @@ public class UsersDao extends AbstractDao {
 	 
 	 public List<User> getAllUsers(int offset, int limit) {
 		String sql = "SELECT * FROM users ORDER BY created DESC LIMIT ? OFFSET ?";
-
-		 try (Connection con = getConnection();
-			 PreparedStatement getSt = con.prepareStatement(sql)) {
+		
+		Connection con = getConnection();
+		
+		 try (PreparedStatement getSt = con.prepareStatement(sql)) {
 			 
 			getSt.setInt(1, limit);
 			getSt.setInt(2, offset);
@@ -98,8 +99,9 @@ public class UsersDao extends AbstractDao {
 		 String sql = 
 		 	"SELECT name FROM permissions WHERE id IN (SELECT perm_id FROM user_permissions WHERE user_id=?)";
 
-		 try (Connection con = getConnection();
-			 PreparedStatement getSt = con.prepareStatement(sql)) {
+		 Connection con = getConnection();
+		 
+		 try (PreparedStatement getSt = con.prepareStatement(sql)) {
 			 
 			getSt.setLong(1, u.getId());
 

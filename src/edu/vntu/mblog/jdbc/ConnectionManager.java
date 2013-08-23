@@ -22,13 +22,24 @@ import javax.sql.DataSource;
  * Date: 8/13/13, 5:37 PM
  * @author Sergey Khruschak (sergey.khruschak@gmail.com)
  */
-public class ConnectionFactory {
+public class ConnectionManager {
 	
-	private static final ConnectionFactory instance = new ConnectionFactory(); 
+	private final ThreadLocal<Connection> threadLocalConnections = new ThreadLocal<Connection>(){
+		@Override
+		protected Connection initialValue() {
+	        try {
+	            return dataSource.getConnection();
+	        } catch (Exception e) {
+	            throw new RuntimeException(e);
+	        }
+		}
+	};
+	
+	private static final ConnectionManager instance = new ConnectionManager(); 
 	
 	private DataSource dataSource = null;
 
-	private ConnectionFactory() {
+	private ConnectionManager() {
 		try {
 	    	InitialContext ic = new InitialContext();
 	    	Context xmlContext = (Context) ic.lookup("java:comp/env");
@@ -40,25 +51,45 @@ public class ConnectionFactory {
 
 	}
 	
-	public static ConnectionFactory getInstance() {
+	public static ConnectionManager getInstance() {
 		return instance;
 	}
 	
-    public Connection getConnection() {
-        try {
-            return dataSource.getConnection();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public Connection currentConnection() {
+    	return threadLocalConnections.get();
     }
     
     public void startTransaction() {
-    	
+    	Connection c = currentConnection();
+    	try {
+    		c.setAutoCommit(false);
+    	} catch (Exception e){
+    		throw new RuntimeException(e);
+    	}
     }
     
     public void commitTransaction() {
-    	
+    	try {
+    		Connection c = currentConnection();
+    		c.commit();
+    		c.close();
+    		threadLocalConnections.remove();
+    	} catch (Exception e){
+    		throw new RuntimeException(e);
+    	}
     }
+
+    public void rollbackTransaction() {
+    	try {
+    		Connection c = currentConnection(); 
+    		c.rollback();
+    		c.close();
+    		threadLocalConnections.remove();
+    	} catch (Exception e){
+    		throw new RuntimeException(e);
+    	}
+    }
+
     
     private static void initDatabase(Connection con) throws IOException, SQLException {
     	String script = readScript("/sql/schema.sql");
@@ -77,7 +108,7 @@ public class ConnectionFactory {
     }
     
     private static String readScript(String location) throws IOException {
-    	InputStream is = ConnectionFactory.class.getResourceAsStream(location);
+    	InputStream is = ConnectionManager.class.getResourceAsStream(location);
     	BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
     	
 	    String         line = null;

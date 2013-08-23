@@ -2,7 +2,7 @@ package edu.vntu.mblog.dao;
 
 import java.sql.Connection;
 
-import edu.vntu.mblog.jdbc.ConnectionFactory;
+import edu.vntu.mblog.jdbc.ConnectionManager;
 
 /**
  * @author sergey
@@ -10,7 +10,7 @@ import edu.vntu.mblog.jdbc.ConnectionFactory;
 public class AbstractDao {
 	
 	protected Connection getConnection() {
-		return ConnectionFactory.getInstance().getConnection();
+		return ConnectionManager.getInstance().currentConnection();
 	}
 	
 	protected void close(AutoCloseable... closeables) {
