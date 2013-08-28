@@ -1,0 +1,24 @@
+<taglib>
+<tlibversion>1.0</tlibversion>
+<jspversion>1.1</jspversion>
+<shortname>permchecker</shortname>
+<info>Sample taglib for Substr operation</info>
+<uri>http://vntu.edu.ua/jsp/taglib/permchecker</uri>
+
+<tag>
+    <name>hasPermission</name>
+    <tagclass>edu.vntu.mblog.web.tags.PermissionsTagHandler</tagclass>
+    
+    <attribute>
+      <name>permissions</name>
+      <required>true</required>
+  	</attribute>    
+</tag>
+
+<tag>
+    <name>unregistered</name>
+    <tagclass>edu.vntu.mblog.web.tags.UnregisteredTagHandler</tagclass> 
+</tag>
+
+
+</taglib> 

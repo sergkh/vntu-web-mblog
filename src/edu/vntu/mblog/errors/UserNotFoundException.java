@@ -17,4 +17,9 @@ public class UserNotFoundException extends Exception {
 	public String getIdentifier() {
 		return identifier;
 	}
+	
+	@Override
+	public String getMessage() {
+		return super.getMessage() + "(id = " + identifier + ')';
+	}
 }

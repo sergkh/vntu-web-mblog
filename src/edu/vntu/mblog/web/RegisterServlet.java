@@ -36,8 +36,7 @@ public class RegisterServlet extends HttpServlet {
 			HttpSession s = request.getSession(); 
 			
 			s.setAttribute("login", login);
-			s.setAttribute("email", email);
-			s.setAttribute("roles", user.getPermissions());
+			s.setAttribute("permissions", user.getPermissions());
 			
 			response.sendRedirect(request.getContextPath() + "/users/"+ login);
 		} catch (ValidationException ve) {

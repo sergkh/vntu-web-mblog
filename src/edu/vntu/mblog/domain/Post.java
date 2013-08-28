@@ -4,52 +4,57 @@ import java.util.Date;
 
 public class Post {
 	
-	private  long entryId;
-	private long ownerId;
+	private long id;
+	private String authorLogin;
 	private String text;
 	private Date date;
 	
-	public Post(long ownerId, String text, Date date) {
-		this(0L, ownerId, text, date);
-	}
-	
-	public Post(long entryId, long ownerId, String text, Date date) {
-		this.entryId = entryId;
-		this.ownerId = ownerId;
+	public Post() {}
+
+	public Post(long id, String authorLogin, String text, Date date) {
+		this();
+		this.id = id;
+		this.authorLogin = authorLogin;
 		this.text = text;
 		this.date = date;
 	}
-
-	public long getentryId() {
-		return entryId;
+	
+	public long getId() {
+		return id;
 	}
-
-	public void setentryId(long entryId) {
-		this.entryId = entryId;
+	
+	public void setId(long id) {
+		this.id = id;
 	}
-
-	public long getOwnerId() {
-		return ownerId;
+	
+	public String getAuthorLogin() {
+		return authorLogin;
 	}
-
-	public void setOwnerId(long ownerId) {
-		this.ownerId = ownerId;
+	
+	public void setAuthorLogin(String authorLogin) {
+		this.authorLogin = authorLogin;
 	}
-
+	
 	public String getText() {
 		return text;
 	}
-
+	
 	public void setText(String text) {
 		this.text = text;
 	}
-
+	
 	public Date getDate() {
 		return date;
 	}
-
+	
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", authorLogin=" + authorLogin + ", text="
+				+ text + ", date=" + date + "]";
 	}
 	
 	

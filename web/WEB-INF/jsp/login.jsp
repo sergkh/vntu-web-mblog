@@ -13,7 +13,7 @@
                 <!-- Login -->
 	            <form action="${pageContext.request.contextPath}/login" method="POST">
 	            
-	            	<div id="session-password-error" class="text-error text-center">${param.error}</div>
+	            	<div id="session-error" class="text-error text-center">${param.errorMsg}</div>
 	            
                     <div class="control-group">
                         <!-- Username -->

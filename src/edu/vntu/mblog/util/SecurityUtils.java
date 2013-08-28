@@ -33,10 +33,13 @@ public class SecurityUtils {
 	}
 	
     private static String byteArray2Hex(byte[] hash) {
-        Formatter formatter = new Formatter();
-        for (byte b : hash) {
-            formatter.format("%02x", b);
+        try(Formatter formatter = new Formatter()) {
+	        
+        	for (byte b : hash) {
+	            formatter.format("%02x", b);
+	        }
+	        
+	        return formatter.toString();
         }
-        return formatter.toString();
     }
 }

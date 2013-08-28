@@ -52,6 +52,8 @@ INSERT INTO users (login,email,passhash) VALUES ('tester', 'tester@mail.com', 'a
 INSERT INTO users (login,email,passhash) VALUES ('user', 'user@mail.com', '12dea96fec20593566ab75692c9949596833adc9');
 INSERT INTO users (login,email,passhash,blocked) VALUES ('<h1>hacker</h1>', 'hacker@mail.ru', '12dea96fec20593566ab75692c9949596833adc9', NOW());
 
+-- add permissions to users
+
 INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='admin', 1);
 INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='admin', 2);
 INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='admin', 3);
@@ -59,3 +61,18 @@ INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='admin', 3
 INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='tester', 1);
 INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='user', 1);
 INSERT INTO user_permissions VALUES (SELECT id FROM users WHERE login='<h1>hacker</h1>', 1);
+
+-- create some test posts
+
+INSERT INTO posts (owner_id, text) VALUES (SELECT id FROM users WHERE login='admin', 'First post');
+INSERT INTO posts (owner_id, text) VALUES (SELECT id FROM users WHERE login='admin', 'Second post');
+
+INSERT INTO posts (owner_id, text) VALUES (SELECT id FROM users WHERE login='tester', 'Testers first post');
+INSERT INTO posts (owner_id, text) VALUES (SELECT id FROM users WHERE login='tester', 'Testers second post');
+
+-- subscribe admin to tester 
+
+INSERT INTO user_followers VALUES ( SELECT id FROM users WHERE login='admin' , SELECT id FROM users WHERE login='tester');
+
+
+

@@ -115,7 +115,9 @@ public class ConnectionManager {
 	    StringBuilder  sb = new StringBuilder();
 
 	    while((line=reader.readLine()) != null) {
-	    	sb.append(line);
+	    	if(!line.startsWith("--")) { // ignore comments 
+	    		sb.append(line);
+	    	}
 	    }
 
 	    return sb.toString();

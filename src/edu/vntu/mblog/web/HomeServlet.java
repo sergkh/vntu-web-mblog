@@ -25,7 +25,7 @@ public class HomeServlet extends HttpServlet {
     	
     	HttpSession s = request.getSession(false);
 		
-    	if(s != null) {
+    	if(s != null && s.getAttribute("login") != null) {
 			// redirect to users page
 			response.sendRedirect(request.getContextPath() + "/users/" + s.getAttribute("login"));
 		} else {

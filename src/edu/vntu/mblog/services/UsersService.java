@@ -3,16 +3,22 @@
  */
 package edu.vntu.mblog.services;
 
+import static edu.vntu.mblog.util.ValidationUtils.validateEmail;
+import static edu.vntu.mblog.util.ValidationUtils.validateLen;
+
 import java.util.EnumSet;
 import java.util.List;
 
+import edu.vntu.mblog.dao.PostsDao;
+import edu.vntu.mblog.dao.UserSubscribersDao;
 import edu.vntu.mblog.dao.UsersDao;
 import edu.vntu.mblog.domain.User;
+import edu.vntu.mblog.domain.UserStatistics;
 import edu.vntu.mblog.errors.AuthenticationExeption;
+import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.jdbc.ConnectionManager;
 import edu.vntu.mblog.util.SecurityUtils;
-import static edu.vntu.mblog.util.ValidationUtils.*;
 
 /**
  * 
@@ -23,6 +29,9 @@ public class UsersService {
 	private static final UsersService instance = new UsersService(); 
 	
 	private final UsersDao usersDao = new UsersDao();
+	private final UserSubscribersDao subscribersDao = new UserSubscribersDao();
+	private final PostsDao postsDao = new PostsDao();
+	
 	private final ConnectionManager cm = ConnectionManager.getInstance();
 	private UsersService() {}
 
@@ -93,4 +102,106 @@ public class UsersService {
 			throw e;
 		}
 	}
+	
+	
+	public UserStatistics getStatistics(String loginOrEmail) {
+		cm.startTransaction();
+		try {
+			
+			User u = usersDao.getByLoginOrEmail(loginOrEmail);
+			
+			if(u == null) {
+				throw new UserNotFoundException(loginOrEmail, "User not found");
+			}
+			
+			long userId = u.getId();
+			
+			UserStatistics stat = new UserStatistics(
+					postsDao.getCountForUser(userId), 
+					subscribersDao.getFollowersCount(userId), 
+					subscribersDao.getFollowingCount(userId)); 
+			
+			cm.commitTransaction();
+			
+			return stat;
+		} catch (Exception e) {
+			cm.rollbackTransaction();
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public boolean isSubscribed(String followedLogin, String subscriberLogin) throws UserNotFoundException {
+		cm.startTransaction();
+		try {
+			
+			User followed = usersDao.getByLoginOrEmail(followedLogin);
+			User subscriber = usersDao.getByLoginOrEmail(subscriberLogin);
+			
+			if(followed == null) {
+				throw new UserNotFoundException(followedLogin, "User not found");
+			}
+	
+			if(subscriber == null) {
+				throw new UserNotFoundException(subscriberLogin, "User not found");
+			}
+			
+			boolean result = subscribersDao.isSubscribed(followed.getId(), subscriber.getId());
+			
+			cm.commitTransaction();
+			
+			return result;
+		} catch (Exception e) {
+			cm.rollbackTransaction();
+			throw e;
+		}
+	}
+	
+	public void subscribe(String followedLogin, String subscriberLogin) throws UserNotFoundException {
+		cm.startTransaction();
+		try {
+			
+			User followed = usersDao.getByLoginOrEmail(followedLogin);
+			User subscriber = usersDao.getByLoginOrEmail(subscriberLogin);
+			
+			if(followed == null) {
+				throw new UserNotFoundException(followedLogin, "User not found");
+			}
+	
+			if(subscriber == null) {
+				throw new UserNotFoundException(subscriberLogin, "User not found");
+			}
+			
+			subscribersDao.subscribe(followed.getId(), subscriber.getId());
+			
+			cm.commitTransaction();
+		} catch (Exception e) {
+			cm.rollbackTransaction();
+			throw e;
+		}
+	}
+	
+	public void unsubscribe(String followedLogin, String subscriberLogin) throws UserNotFoundException {
+		cm.startTransaction();
+		try {
+			
+			User followed = usersDao.getByLoginOrEmail(followedLogin);
+			User subscriber = usersDao.getByLoginOrEmail(subscriberLogin);
+			
+			if(followed == null) {
+				throw new UserNotFoundException(followedLogin, "User not found");
+			}
+	
+			if(subscriber == null) {
+				throw new UserNotFoundException(subscriberLogin, "User not found");
+			}
+			
+			subscribersDao.unsubscribe(followed.getId(), subscriber.getId());
+			
+			cm.commitTransaction();
+		} catch (Exception e) {
+			cm.rollbackTransaction();
+			throw e;
+		}
+	}
+	
 }
