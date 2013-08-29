@@ -27,7 +27,7 @@
 
         <ul class="nav pull-right">
             <li class="divider-vertical"></li>
-            <li><a href="${pageContext.request.contextPath}/users/${sessionScope.login}">${sessionScope.login}</a></li>
+            <li><a href="${pageContext.request.contextPath}/users/${sessionScope.user.login}">${sessionScope.user.login}</a></li>
             
             <auth:hasPermission permissions="USER">
             	<li>

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.PostsService;
@@ -24,13 +25,13 @@ public class PostsServlet extends HttpServlet {
 		String text = request.getParameter("text");
 		
 		HttpSession s = request.getSession();
-		
-		String login = (String) s.getAttribute("login");
+
+        User user = (User) s.getAttribute(SessionConstants.USER);
 		
 		try {
-			postsService.createPost(login, text);
+			postsService.createPost(user.getLogin(), text);
 			
-			response.sendRedirect(request.getContextPath() + "/users/"+ login);
+			response.sendRedirect(request.getContextPath() + "/users/"+ user.getLogin());
 		} catch (UserNotFoundException e) {
 			// TODO handle this
 			e.printStackTrace();

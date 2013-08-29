@@ -5,6 +5,7 @@ CREATE TABLE users (
     email varchar(512) NOT NULL,
     passhash varchar(40) NOT NULL,
     blocked timestamp,
+    has_avatar boolean DEFAULT false,
     UNIQUE(email),
     UNIQUE(login)
 );

@@ -33,10 +33,9 @@ public class LoginServlet extends HttpServlet {
 		try {
 			User user = usersService.login(login, password);
 
-			HttpSession s = request.getSession(); 
-			s.setAttribute("login", user.getLogin());
-			s.setAttribute("permissions", user.getPermissions());
-			
+			HttpSession s = request.getSession();
+			s.setAttribute("user", user);
+
 			response.sendRedirect(request.getContextPath() + "/users/"+ login);	
 
 		} catch (AuthenticationExeption authEx) {

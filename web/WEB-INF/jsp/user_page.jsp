@@ -30,7 +30,7 @@
 						</form>
 				    </c:when>
 			
-				    <c:when test="${!subscribed && sessionScope.login}">
+				    <c:when test="${!subscribed && sessionScope.user}">
 		    			<form action="${pageContext.request.contextPath}/subscribtions/${user}" method="POST">
 		        			<button type="submit" class="btn btn-success pull-right"> <i class="icon-star"></i> Підписатись</button>
 	        			</form>

@@ -1,41 +1,41 @@
 package edu.vntu.mblog.web.tags;
 
-import java.util.EnumSet;
+import edu.vntu.mblog.domain.User;
+import edu.vntu.mblog.domain.User.Permission;
+import edu.vntu.mblog.web.SessionConstants;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import edu.vntu.mblog.domain.User.Permission;
-
 public class PermissionsTagHandler extends TagSupport {
 	
 	private static final long serialVersionUID = -4953710291722438417L;
 	
-	private String permissions;
+	private Permission permissions;
 
 	public PermissionsTagHandler() {}
 
 	public String getPermissions() {
-		return permissions;
+		return permissions.name();
 	}
 
 	public void setPermissions(String permissions) {
-		this.permissions = permissions;
+		this.permissions = Permission.valueOf(permissions.toUpperCase());
 	}
 	
 	@Override
 	public int doStartTag() throws JspException {
 		HttpSession session = pageContext.getSession();
 		
-		if(session == null || session.getAttribute("permissions") == null) {
+		if(session == null || session.getAttribute(SessionConstants.USER) == null) {
 			return SKIP_BODY;
 		}
-		
-		EnumSet<Permission> userPerm = 
-				(EnumSet<Permission>) session.getAttribute("permissions");
-		
-		boolean result = userPerm.contains(Permission.valueOf(permissions.toUpperCase()));
+
+
+        User user = (User) session.getAttribute(SessionConstants.USER);
+
+		boolean result = user.getPermissions().contains(permissions);
 		
 		return result ? EVAL_BODY_INCLUDE : SKIP_BODY;
 	}

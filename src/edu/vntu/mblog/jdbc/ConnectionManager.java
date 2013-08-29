@@ -10,11 +10,12 @@ import java.sql.Statement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
 import javax.sql.DataSource;
 
 /**
  * Helper class allowing to get database connection from JNDI.
- * To create datasource one need to add following into tomcats conf/context.xml file:
+ * To create data source one need to add following into tomcats conf/context.xml file:
  *
  * <Resource name="jdbc/dataSource" auth="Container" type="javax.sql.DataSource" driverClassName="org.h2.Driver"
  *      url="jdbc:h2:mem:test" username="dbuser" password="dbpass" maxActive="20" maxIdle="10" maxWait="-1"/>
@@ -45,8 +46,12 @@ public class ConnectionManager {
 	    	Context xmlContext = (Context) ic.lookup("java:comp/env");
 	        dataSource = (DataSource) xmlContext.lookup("jdbc/dataSource");
 	        initDatabase(dataSource.getConnection());
+        } catch (NameNotFoundException nfe) {
+            throw new RuntimeException("Can't obtain dataSource from context. " +
+                    "Have you added data source to context.xml file? " +
+                    "Read javadoc on ConnectionManager.java file.");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't obtain dataSource from context", e);
         }
 
 	}

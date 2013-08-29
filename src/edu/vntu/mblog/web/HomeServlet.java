@@ -1,5 +1,7 @@
 package edu.vntu.mblog.web;
 
+import edu.vntu.mblog.domain.User;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,9 +27,10 @@ public class HomeServlet extends HttpServlet {
     	
     	HttpSession s = request.getSession(false);
 		
-    	if(s != null && s.getAttribute("login") != null) {
+    	if(s != null && s.getAttribute(SessionConstants.USER) != null) {
 			// redirect to users page
-			response.sendRedirect(request.getContextPath() + "/users/" + s.getAttribute("login"));
+            User u = (User) s.getAttribute(SessionConstants.USER);
+			response.sendRedirect(request.getContextPath() + "/users/" + u.getLogin());
 		} else {
 			// no user session found - show login/register page
 	        RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.services.UsersService;
 
@@ -34,12 +35,12 @@ public class SubscriptionsServlet extends HttpServlet {
 		String login = req.getPathInfo().replace("/", "");
 		try {
 			HttpSession session = req.getSession(false); 
-			String curUserLogin = (String) session.getAttribute("login");
+			User curUser = (User) session.getAttribute(SessionConstants.USER);
 			
 			if(addOrRemove) {
-				usersService.subscribe(login, curUserLogin);
+				usersService.subscribe(login, curUser.getLogin());
 			} else {
-				usersService.unsubscribe(login, curUserLogin);
+				usersService.unsubscribe(login, curUser.getLogin());
 			}
         
 		} catch (UserNotFoundException unfe) {

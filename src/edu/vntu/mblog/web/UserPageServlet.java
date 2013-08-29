@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.services.PostsService;
 import edu.vntu.mblog.services.UsersService;
@@ -35,9 +36,9 @@ public class UserPageServlet extends HttpServlet {
 			
 			HttpSession session = request.getSession(false); 
 			
-			if(session != null && session.getAttribute("login") != null) {
-				String curUserLogin = (String) session.getAttribute("login");
-				request.setAttribute("subscribed", usersService.isSubscribed(login, curUserLogin));
+			if(session != null && session.getAttribute(SessionConstants.USER) != null) {
+                User curUser = (User) session.getAttribute(SessionConstants.USER);
+				request.setAttribute("subscribed", usersService.isSubscribed(login, curUser.getLogin()));
 			} else {
 				request.setAttribute("subscribed", false);
 			}

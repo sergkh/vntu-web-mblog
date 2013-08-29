@@ -1,9 +1,10 @@
 package edu.vntu.mblog.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.EnumSet;
 
-public class User {
+public class User implements Serializable {
 	
 	public enum Permission {
 		USER, MODERATE_POSTS, MANAGE_USERS;
@@ -15,6 +16,7 @@ public class User {
 	private String email;
 	private String passHash;
 	private Date blockDate;
+    private boolean hasAvatar;
 	private EnumSet<Permission> permissions;
 	
 	public User(String login, String email, String passHash) {
@@ -84,5 +86,12 @@ public class User {
 	public void setPermissions(EnumSet<Permission> permissions) {
 		this.permissions = permissions;
 	}
-	
+
+    public boolean isHasAvatar() {
+        return hasAvatar;
+    }
+
+    public void setHasAvatar(boolean hasAvatar) {
+        this.hasAvatar = hasAvatar;
+    }
 }

@@ -34,10 +34,8 @@ public class RegisterServlet extends HttpServlet {
 			User user = usersService.register(login, email, password);
 			
 			HttpSession s = request.getSession(); 
-			
-			s.setAttribute("login", login);
-			s.setAttribute("permissions", user.getPermissions());
-			
+			s.setAttribute(SessionConstants.USER, user);
+
 			response.sendRedirect(request.getContextPath() + "/users/"+ login);
 		} catch (ValidationException ve) {
 			ve.printStackTrace(); // TODO: handle exception
