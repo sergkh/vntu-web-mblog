@@ -1,12 +1,6 @@
 package edu.vntu.mblog.jdbc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -24,6 +18,8 @@ import javax.sql.DataSource;
  * @author Sergey Khruschak (sergey.khruschak@gmail.com)
  */
 public class ConnectionManager {
+	private static final ConnectionManager instance = new ConnectionManager(); 
+	private final DataSource dataSource;
 	
 	private final ThreadLocal<Connection> threadLocalConnections = new ThreadLocal<Connection>(){
 		@Override
@@ -35,17 +31,12 @@ public class ConnectionManager {
 	        }
 		}
 	};
-	
-	private static final ConnectionManager instance = new ConnectionManager(); 
-	
-	private DataSource dataSource = null;
 
 	private ConnectionManager() {
 		try {
 	    	InitialContext ic = new InitialContext();
 	    	Context xmlContext = (Context) ic.lookup("java:comp/env");
 	        dataSource = (DataSource) xmlContext.lookup("jdbc/dataSource");
-	        initDatabase(dataSource.getConnection());
         } catch (NameNotFoundException nfe) {
             throw new RuntimeException("Can't obtain dataSource from context. " +
                     "Have you added data source to context.xml file? " +
@@ -93,39 +84,6 @@ public class ConnectionManager {
     	} catch (Exception e){
     		throw new RuntimeException(e);
     	}
-    }
-
-    
-    private static void initDatabase(Connection con) throws IOException, SQLException {
-    	String script = readScript("/sql/schema.sql");
-    	
-        Statement st = con.createStatement();
-
-        for(String sql : script.split(";")) {
-            st.addBatch(sql);
-        }
-
-        st.executeBatch();
-        st.close();
-
-        con.commit();
-        con.close();
-    }
-    
-    private static String readScript(String location) throws IOException {
-    	InputStream is = ConnectionManager.class.getResourceAsStream(location);
-    	BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-    	
-	    String         line = null;
-	    StringBuilder  sb = new StringBuilder();
-
-	    while((line=reader.readLine()) != null) {
-	    	if(!line.startsWith("--")) { // ignore comments 
-	    		sb.append(line);
-	    	}
-	    }
-
-	    return sb.toString();
     }
 }
 

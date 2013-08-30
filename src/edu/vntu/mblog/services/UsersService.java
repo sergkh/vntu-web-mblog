@@ -104,7 +104,7 @@ public class UsersService {
 	}
 	
 	
-	public UserStatistics getStatistics(String loginOrEmail) {
+	public UserStatistics getStatistics(String loginOrEmail) throws UserNotFoundException {
 		cm.startTransaction();
 		try {
 			
@@ -126,7 +126,7 @@ public class UsersService {
 			return stat;
 		} catch (Exception e) {
 			cm.rollbackTransaction();
-			throw new RuntimeException(e);
+			throw e;
 		}
 	}
 	

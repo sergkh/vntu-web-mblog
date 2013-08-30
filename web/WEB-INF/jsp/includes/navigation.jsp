@@ -6,21 +6,21 @@
         <ul class="nav">
        		<auth:hasPermission permissions="USER">
    				<li>
-   					<a href="${pageContext.request.contextPath}/"> <i class="icon-home"></i> Моя сторінка</a>
+   					<a href="${pageContext.request.contextPath}/users/${sessionScope.user.login}"> <i class="icon-home"></i> Моя сторінка</a>
    				</li>
             	<li class="divider-vertical"></li>
 			</auth:hasPermission>
         
             <auth:hasPermission permissions="MODERATE_POSTS">
 	            <li>
-	                <a href="${pageContext.request.contextPath}/moderator/"> <i class="icon-eye-open"></i> Модерація</a>
+	                <a href="${pageContext.request.contextPath}/moderator"> <i class="icon-eye-open"></i> Модерація</a>
 	            </li>
 	            <li class="divider-vertical"></li>
             </auth:hasPermission>
             
             <auth:hasPermission permissions="MANAGE_USERS">
-	            <li class="active">
-	                <a href="${pageContext.request.contextPath}/admin/"> <i class="icon-th-list"></i> Користувачі</a>
+	            <li>
+	                <a href="${pageContext.request.contextPath}/admin"> <i class="icon-th-list"></i> Користувачі</a>
 	            </li>
             </auth:hasPermission>
         </ul>
@@ -31,7 +31,7 @@
             
             <auth:hasPermission permissions="USER">
             	<li>
-            		<form action="/logout" method="POST">
+            		<form action="${pageContext.request.contextPath}/logout" method="POST">
             			<button type="submit" class="btn btn-small pull-right">Вихід</button>
            			</form>
           		</li>

@@ -22,27 +22,29 @@
 				<span class=" badge badge-info">${userStat.following} підписок(а)</span> 
 			</div>
 			<div class="span2">
-			
-				<c:choose>
-				    <c:when test="${subscribed}">
-				    	<form action="${pageContext.request.contextPath}/subscribtions/${user}" method="DELETE">
-							<button type="submit" class="btn btn-warning pull-right"> <i class="icon-star-empty"></i> Відписатись</button>
-						</form>
-				    </c:when>
-			
-				    <c:when test="${!subscribed && sessionScope.user}">
-		    			<form action="${pageContext.request.contextPath}/subscribtions/${user}" method="POST">
-		        			<button type="submit" class="btn btn-success pull-right"> <i class="icon-star"></i> Підписатись</button>
-	        			</form>
-				    </c:when>
-				</c:choose>
-				
-      			<auth:unregistered>
-	       			<a href="${pageContext.request.contextPath}/" class="btn btn-success pull-right"> 
-    	   				<i class="icon-user"></i> Увійти
-       				</a>
-      			</auth:unregistered>
 
+    			<auth:unregistered>
+   					<a href="${pageContext.request.contextPath}/" class="btn btn-success pull-right"> <i class="icon-user"></i> Увійти </a>
+				</auth:unregistered>
+			
+				<auth:hasPermission permissions="USER">
+					<c:choose>
+					    <c:when test="${subscribed}">
+					    	<form action="${pageContext.request.contextPath}/subscriptions/${user}" method="POST">
+					    		<input type="hidden" name="action" value="unsubscribe">
+								<button type="submit" class="btn btn-warning pull-right"> <i class="icon-star-empty"></i> Відписатись</button>
+							</form>
+					    </c:when>
+			
+					    <c:when test="${!subscribed && sessionScope.user.login != user}">
+				    		<form action="${pageContext.request.contextPath}/subscriptions/${user}" method="POST">
+				    			<input type="hidden" name="action" value="subscribe">
+		        				<button type="submit" class="btn btn-success pull-right"> <i class="icon-star"></i> Підписатись</button>
+	        				</form>
+					    </c:when>
+					</c:choose>
+		    	</auth:hasPermission>
+				
 			</div>
 		</div>
 	</div>
@@ -50,7 +52,7 @@
  	<auth:hasPermission permissions="USER">
 	 	<div class="row-fluid">
 	 		
-	 		<form id="post-message-form" action="/messages/" method="post">
+	 		<form id="post-message-form" action="${pageContext.request.contextPath}/messages" method="post">
 	 			<fieldset>
 					<textarea name="text" class="input-block-level" rows="3" placeholder="Напишіть повідомлення..."></textarea>
 	 				
@@ -66,8 +68,9 @@
 		<c:forEach var="msg" items="${posts}">
 		    <div class="row-fluid">
 		    	<div class="span1 text-center">
-		    		<a href="${pageContext.request.contextPath}/users/${msg.authorLogin}/">
+		    		<a href="${pageContext.request.contextPath}/users/${msg.authorLogin}">
 		    			<img src="http://placehold.it/42x42" class="img-circle">
+		    			${msg.authorLogin}
 	    			</a>
 		    	</div>
 	  		    <div class="span9"><c:out value="${msg.text}"/></div>

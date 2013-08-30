@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.EnumSet;
 
 public class User implements Serializable {
-	
+	private static final long serialVersionUID = -961884833081701094L;
+
 	public enum Permission {
 		USER, MODERATE_POSTS, MANAGE_USERS;
 	}

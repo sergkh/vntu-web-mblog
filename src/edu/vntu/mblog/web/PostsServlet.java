@@ -2,6 +2,7 @@ package edu.vntu.mblog.web;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +16,7 @@ import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.PostsService;
 
 
-@WebServlet("/messages/")
+@WebServlet("/messages")
 public class PostsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
@@ -33,8 +34,11 @@ public class PostsServlet extends HttpServlet {
 			
 			response.sendRedirect(request.getContextPath() + "/users/"+ user.getLogin());
 		} catch (UserNotFoundException e) {
-			// TODO handle this
-			e.printStackTrace();
+	        RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/errors/user_not_found.jsp");
+	        view.forward(request, response);
+	        
+	        e.printStackTrace();
+	        
 		} catch (ValidationException e) {
 			// TODO and this
 			e.printStackTrace();

@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.vntu.mblog.domain.User;
+import edu.vntu.mblog.web.SessionConstants;
 
 /**
  * Servlet Filter implementation class AuthorizatioFilter
@@ -26,7 +26,7 @@ public class AuthorizatioFilter implements Filter {
     public AuthorizatioFilter() {}
 
     private final AuthRule[] rules = {
-    		new AuthRule("/admin/.*", User.Permission.MANAGE_USERS),
+    		new AuthRule("/admin.*", User.Permission.MANAGE_USERS),
     		new AuthRule("/messages/", User.Permission.USER)
     }; 
     
@@ -40,29 +40,29 @@ public class AuthorizatioFilter implements Filter {
 		
 		User.Permission requiredPerm = findRequredPermission(httpReq.getRequestURI().substring(contextPathLen));
 		
-		if(requiredPerm != null) {
-			HttpSession session = httpReq.getSession(false);
-			
-			if(session != null) {
-				User.Permission perm = (User.Permission) session.getAttribute("permissions");
-				
-				if(requiredPerm == perm) {
-					chain.doFilter(request, response);
-				}
-			}
-			
-			authFailedResponse(httpReq, (HttpServletResponse)response);
-			
-		} else {
-			chain.doFilter(request, response);	
+		if(requiredPerm == null) {
+			chain.doFilter(request, response);
+			return;
 		}
+
+		HttpSession session = httpReq.getSession(false);
+		
+		if(session != null) {
+			User user = (User) session.getAttribute(SessionConstants.USER);
+			
+			if(user != null && user.getPermissions().contains(requiredPerm)) {
+				// we have been authenticated - pass the request 
+				chain.doFilter(request, response);
+				return;
+			}
+		}
+		
+		authFailedResponse(httpReq, (HttpServletResponse)response);
 	}
 	
 	private void authFailedResponse(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		
-		RequestDispatcher view = req.getRequestDispatcher("/WEB-INF/jsp/errors/auth-failed.jsp");
-        view.forward(req, response);
+		// Will trigger auth_failed.jsp page as defined in web.xml
+		response.sendError(HttpServletResponse.SC_FORBIDDEN);
 	}
 
 	private User.Permission findRequredPermission(String url) {

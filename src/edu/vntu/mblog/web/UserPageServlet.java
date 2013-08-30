@@ -51,7 +51,10 @@ public class UserPageServlet extends HttpServlet {
         
 		} catch (UserNotFoundException unfe) {
 			unfe.printStackTrace();
-			// TODO: show error page here
+			
+	        RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/errors/user_not_found.jsp");
+	        view.forward(request, response);
+        
 		}
 	}
 

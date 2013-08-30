@@ -6,6 +6,7 @@
 <title>Authentication failed</title>
 </head>
 <body>
-	Sorry, but You don't have permissions to access that page.
+	Вибачте але сторінку не знайдено.<br/> 
+	<a href="${pageContext.request.contextPath}">Перейти на головну.</a>
 </body>
 </html>

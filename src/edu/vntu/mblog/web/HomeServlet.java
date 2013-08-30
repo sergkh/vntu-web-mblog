@@ -30,7 +30,7 @@ public class HomeServlet extends HttpServlet {
     	if(s != null && s.getAttribute(SessionConstants.USER) != null) {
 			// redirect to users page
             User u = (User) s.getAttribute(SessionConstants.USER);
-			response.sendRedirect(request.getContextPath() + "/users/" + u.getLogin());
+			response.sendRedirect("users/" + u.getLogin());
 		} else {
 			// no user session found - show login/register page
 	        RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
