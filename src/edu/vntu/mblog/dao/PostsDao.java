@@ -1,10 +1,12 @@
 package edu.vntu.mblog.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import edu.vntu.mblog.domain.Post;
@@ -25,7 +27,35 @@ public class PostsDao extends AbstractDao {
 			throw new RuntimeException(e);
 		}
 	 }
-	 
+	
+	public void delete(long authorId, String text) {
+		String sql = "delete from posts where owner_id=? AND text=?";
+		Connection con = getConnection();
+
+		try (PreparedStatement createSt = con.prepareStatement(sql)) {
+			createSt.setLong(1, authorId);
+			createSt.setString(2, text);
+			createSt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void confirm(long authorId, String text) {
+		String sql = "insert into posts (confirmDate) VALUES(NOW()) where owner_id=? AND text=?";
+		Connection con = getConnection();
+		
+		try (PreparedStatement createSt = con.prepareStatement(sql)) {
+			createSt.setLong(2, authorId);
+			createSt.setString(3, text);
+			createSt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	 public List<Post> getAll(int offset, int limit) {
 		String sql = "SELECT users.login AS login, posts.* FROM users, posts "
 				+ "WHERE users.id = posts.owner_id "
@@ -102,7 +132,7 @@ public class PostsDao extends AbstractDao {
 	 private Post convert(ResultSet rs) throws SQLException {
 		 return new Post(
 				 rs.getLong("id"),
-				 rs.getString("login"),
+				 rs.getString("login"),   //?????????????????????????????????????
 				 rs.getString("text"),
 				 rs.getTimestamp("stamp")
 		 );

@@ -24,7 +24,8 @@ CREATE TABLE posts (
   id bigserial PRIMARY KEY,
   owner_id bigint NOT NULL,
   text varchar(512) NOT NULL,
-  stamp timestamp NOT NULL DEFAULT NOW()
+  stamp timestamp NOT NULL DEFAULT NOW(),
+  post_confirm_date timestamp
 );
 
 CREATE TABLE user_followers (

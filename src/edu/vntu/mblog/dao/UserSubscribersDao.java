@@ -59,7 +59,7 @@ public class UserSubscribersDao extends AbstractDao {
 	}
 	
 	public int getFollowersCount(long userId) {
-	 	String sql = "SELECT COUNT(*) FROM user_followers WHERE followed_id=?";
+	 	String sql = "SELECT COUNT(*) FROM user_followers WHERE followed_id=?"; 
 		
 		Connection con = getConnection();
 

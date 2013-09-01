@@ -8,6 +8,8 @@ public class Post {
 	private String authorLogin;
 	private String text;
 	private Date date;
+	private Date confirmDate;
+	private boolean confirmed;
 	
 	public Post() {}
 
@@ -17,6 +19,8 @@ public class Post {
 		this.authorLogin = authorLogin;
 		this.text = text;
 		this.date = date;
+		this.confirmDate=null;
+		confirmed=false;
 	}
 	
 	public long getId() {
@@ -51,10 +55,26 @@ public class Post {
 		this.date = date;
 	}
 
+	public Date getConfirmDate() {
+		return confirmDate;
+	}
+
+	public void setConfirmDate(Date confirmDate) {
+		this.confirmDate = confirmDate;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+
 	@Override
 	public String toString() {
 		return "Post [id=" + id + ", authorLogin=" + authorLogin + ", text="
-				+ text + ", date=" + date + "]";
+				+ text + ", date=" + date + ", confirmDate=" + confirmDate + "]";
 	}
 	
 	
