@@ -23,8 +23,6 @@ public class HomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 4289764775386171808L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	getServletContext().log("Rendering users page");
-    	
     	HttpSession s = request.getSession(false);
 		
     	if(s != null && s.getAttribute(SessionConstants.USER) != null) {

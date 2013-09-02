@@ -35,7 +35,7 @@ public class ModeratorServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	getServletContext().log("Rendering moderator page");
-    	
+
     	try {
 			request.setAttribute("posts", postsService.getAllPosts(0, POSTS_LIMIT));
 		} catch (ValidationException e) {
@@ -50,8 +50,25 @@ public class ModeratorServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//super.doPost(req, resp);
+
+        String action = req.getParameter("action");
+        long postId = Long.parseLong(req.getParameter("postId"));
+
+        switch (action) {
+            case "deletePost":
+
+                break;
+            case "confirmPost":
+                postsService.confirmPost();
+                break;
+
+            default:
+                // TODO:
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/moderator");
+
+
 //		String login = req.getParameter("msg.authorLogin");
 //		String text = req.getParameter("msg.text");
 //		

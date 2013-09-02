@@ -27,7 +27,9 @@ public class AuthorizatioFilter implements Filter {
 
     private final AuthRule[] rules = {
     		new AuthRule("/admin.*", User.Permission.MANAGE_USERS),
-    		new AuthRule("/messages/", User.Permission.USER)
+    		new AuthRule("/messages/?", User.Permission.USER),
+            new AuthRule("/avatars/?", User.Permission.USER),
+            new AuthRule("/moderator.*", User.Permission.MODERATE_POSTS)
     }; 
     
 	public void init(FilterConfig fConfig) throws ServletException {}

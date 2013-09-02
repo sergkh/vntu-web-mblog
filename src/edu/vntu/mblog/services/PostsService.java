@@ -76,63 +76,41 @@ public class PostsService {
 
 
 
-public List<Post> getAllPosts(int offset, int limit) throws ValidationException {
-	if(offset < 0) 
-		throw new ValidationException("offset", "Offset can't be negative");
-	
-	if(limit < 0) 
-		throw new ValidationException("limit", "Limit can't be negative");
-	
-	cm.startTransaction();
-	try {
-		
-		List<Post> posts = postsDao.getAll(offset, limit); 
-		
-		cm.commitTransaction();
-		
-		return posts;
-	} catch (Exception e) {
-		cm.rollbackTransaction();
-		throw e;
-	}
-}
+    public List<Post> getAllPosts(int offset, int limit) throws ValidationException {
+        if(offset < 0)
+            throw new ValidationException("offset", "Offset can't be negative");
 
-public void deletePost(String userLogin, String post) throws UserNotFoundException, ValidationException {
-	
-	
-	cm.startTransaction();
-	try {
-		User u = usersDao.getByLoginOrEmail(userLogin);
-		
-		if(u == null) {
-			throw new UserNotFoundException(userLogin, "User not found");
-		}
-		
-		postsDao.delete(u.getId(), post); 
-		cm.commitTransaction();
-	} catch (Exception e) {
-		cm.rollbackTransaction();
-		throw e;
-	}
-}
+        if(limit < 0)
+            throw new ValidationException("limit", "Limit can't be negative");
 
-public void confirmPost(String userLogin, String post) throws UserNotFoundException, ValidationException {
-	
-	cm.startTransaction();
-	try {
-		User u = usersDao.getByLoginOrEmail(userLogin);
-		
-		if(u == null) {
-			throw new UserNotFoundException(userLogin, "User not found");
-		}
-		
-		postsDao.confirm(u.getId(), post); 
-		cm.commitTransaction();
-	} catch (Exception e) {
-		cm.rollbackTransaction();
-		throw e;
-	}
-}
+        cm.startTransaction();
+        try {
+
+            List<Post> posts = postsDao.getAll(offset, limit);
+
+            cm.commitTransaction();
+
+            return posts;
+        } catch (Exception e) {
+            cm.rollbackTransaction();
+            throw e;
+        }
+    }
+
+    public void validatePost(long id, boolean confirm) {
+
+        cm.startTransaction();
+        try {
+
+            if(confirm) postsDao.confirm(id);
+            else postsDao.delete(id);
+
+            cm.commitTransaction();
+        } catch (Exception e) {
+            cm.rollbackTransaction();
+            throw new RuntimeException(e);
+        }
+    }
 
 }
 

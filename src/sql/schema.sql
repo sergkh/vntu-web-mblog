@@ -25,7 +25,8 @@ CREATE TABLE posts (
   owner_id bigint NOT NULL,
   text varchar(512) NOT NULL,
   stamp timestamp NOT NULL DEFAULT NOW(),
-  post_confirm_date timestamp
+  post_validation_date timestamp,
+  state smallint
 );
 
 CREATE TABLE user_followers (

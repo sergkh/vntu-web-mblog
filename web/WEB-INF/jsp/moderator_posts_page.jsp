@@ -32,12 +32,16 @@
 <!-- 					    </div> -->
 			    	    
 			    	    
-				    	<form action="${pageContext.request.contextPath}/moderator" method="DELETE">
+				    	<form action="${pageContext.request.contextPath}/moderator" method="POST">
+                            <input type="hidden" name="action" value="deletePost">
+                            <input type="hidden" name="postId" value="${msg.id}">
 							<button type="submit" class="btn btn-danger btn-mini pull-right"> <i class="icon-remove"></i> Заборонити</button>
 						</form>
 				  
 				   
 		    			<form action="${pageContext.request.contextPath}/moderator" method="POST">
+                            <input type="hidden" name="action" value="confirmPost">
+                            <input type="hidden" name="postId" value="${msg.id}">
 		        			<button type="submit" class="btn btn-success btn-mini pull-right"> <i class="icon-ok"></i> Підтвердити</button>
 	        			</form>
 				       

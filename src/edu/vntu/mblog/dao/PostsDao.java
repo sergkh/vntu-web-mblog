@@ -42,13 +42,13 @@ public class PostsDao extends AbstractDao {
 		}
 	}
 	
-	public void confirm(long authorId, String text) {
-		String sql = "insert into posts (confirmDate) VALUES(NOW()) where owner_id=? AND text=?";
+	public void confirm(long postId) {
+		String sql = "UPDATE posts SET post_validation_date=NOW(), state=? where id=?";
 		Connection con = getConnection();
 		
 		try (PreparedStatement createSt = con.prepareStatement(sql)) {
-			createSt.setLong(2, authorId);
-			createSt.setString(3, text);
+			createSt.setLong(1, Post.State.CONFIRMED.ordinal());
+			createSt.setString(2, postId);
 			createSt.executeUpdate();
 			
 		} catch (SQLException e) {

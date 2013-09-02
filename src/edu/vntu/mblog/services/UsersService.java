@@ -203,5 +203,15 @@ public class UsersService {
 			throw e;
 		}
 	}
-	
+
+    public void setAvatarUploaded(long userId) {
+        cm.startTransaction();
+        try {
+            usersDao.setAvatarUploaded(userId);
+            cm.commitTransaction();
+        } catch (Exception e) {
+            cm.rollbackTransaction();
+            throw e;
+        }
+    }
 }

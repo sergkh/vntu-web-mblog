@@ -94,7 +94,20 @@ public class UsersDao extends AbstractDao {
 			throw new RuntimeException(e);
 		}
 	 }
-	 
+
+    public void setAvatarUploaded(long userId) {
+        String sql = "UPDATE users SET has_avatar = true WHERE id=?";
+
+        Connection con = getConnection();
+
+        try (PreparedStatement createSt = con.prepareStatement(sql)) {
+            createSt.setLong(1, userId);
+            createSt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 	 private User loadRoles(User u) {
 		 String sql = 
 		 	"SELECT name FROM permissions WHERE id IN (SELECT perm_id FROM user_permissions WHERE user_id=?)";
