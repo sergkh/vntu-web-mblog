@@ -26,7 +26,7 @@ CREATE TABLE posts (
   text varchar(512) NOT NULL,
   stamp timestamp NOT NULL DEFAULT NOW(),
   post_validation_date timestamp,
-  state smallint
+  state smallint DEFAULT 2
 );
 
 CREATE TABLE user_followers (

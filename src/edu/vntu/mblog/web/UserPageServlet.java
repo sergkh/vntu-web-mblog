@@ -34,6 +34,7 @@ public class UserPageServlet extends HttpServlet {
 			request.setAttribute("user", login);
 			request.setAttribute("userStat", usersService.getStatistics(login));
 			
+			
 			HttpSession session = request.getSession(false); 
 			
 			if(session != null && session.getAttribute(SessionConstants.USER) != null) {

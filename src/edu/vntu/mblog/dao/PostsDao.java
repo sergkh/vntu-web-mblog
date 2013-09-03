@@ -27,28 +27,15 @@ public class PostsDao extends AbstractDao {
 			throw new RuntimeException(e);
 		}
 	 }
-	
-	public void delete(long authorId, String text) {
-		String sql = "delete from posts where owner_id=? AND text=?";
-		Connection con = getConnection();
-
-		try (PreparedStatement createSt = con.prepareStatement(sql)) {
-			createSt.setLong(1, authorId);
-			createSt.setString(2, text);
-			createSt.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public void confirm(long postId) {
+		
+	public void validate(long postId, int state) {
 		String sql = "UPDATE posts SET post_validation_date=NOW(), state=? where id=?";
 		Connection con = getConnection();
 		
 		try (PreparedStatement createSt = con.prepareStatement(sql)) {
-			createSt.setLong(1, Post.State.CONFIRMED.ordinal());
-			createSt.setString(2, postId);
+			//createSt.setInt(1, Post.State.CONFIRMED.ordinal());
+			createSt.setInt(1, state);
+			createSt.setLong(2, postId);
 			createSt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -57,9 +44,13 @@ public class PostsDao extends AbstractDao {
 	}
 
 	 public List<Post> getAll(int offset, int limit) {
-		String sql = "SELECT users.login AS login, posts.* FROM users, posts "
-				+ "WHERE users.id = posts.owner_id "
-				+ "ORDER BY posts.stamp DESC LIMIT ? OFFSET ?";
+//		String sql = "SELECT users.login AS login, posts.* FROM users, posts "
+//				+ "WHERE users.id = posts.owner_id " 
+//				+ "ORDER BY posts.stamp DESC LIMIT ? OFFSET ?";
+		 String sql = "SELECT users.login AS login, posts.* FROM users, posts "
+					+ "WHERE users.id = posts.owner_id AND posts.state!=1 " 
+					+ "ORDER BY posts.stamp DESC LIMIT ? OFFSET ?";
+
 	
 		Connection con = getConnection();
 
@@ -82,7 +73,8 @@ public class PostsDao extends AbstractDao {
 	 }
 	 
 	 public int getCountForUser(long userId) {
-		 String sql = "SELECT COUNT(*) FROM posts WHERE posts.owner_id = ?";
+		 //String sql = "SELECT COUNT(*) FROM posts WHERE posts.owner_id = ?";
+		 String sql = "SELECT COUNT(*) FROM posts WHERE posts.owner_id = ? AND posts.state NOT IN (1)";
 		
 			Connection con = getConnection();
 
@@ -101,10 +93,15 @@ public class PostsDao extends AbstractDao {
 	 }
 	 
 	 public List<Post> getFeed(long userId, int offset, int limit) {
-		String sql = "SELECT users.login AS login, posts.* FROM users, posts "
+//		 String sql = "SELECT users.login AS login, posts.* FROM users, posts "
+//					+ "WHERE users.id = posts.owner_id AND ("
+//					+ "users.id IN (SELECT followed_id FROM user_followers WHERE subscriber_id=?) "
+//					+ "OR users.id = ?)  "
+//					+ "ORDER BY posts.stamp DESC LIMIT ? OFFSET ?";
+		 String sql = "SELECT users.login AS login, posts.* FROM users, posts "
 				+ "WHERE users.id = posts.owner_id AND ("
 				+ "users.id IN (SELECT followed_id FROM user_followers WHERE subscriber_id=?) "
-				+ "OR users.id = ?) "
+				+ "OR users.id = ?)  AND posts.state!=1 "
 				+ "ORDER BY posts.stamp DESC LIMIT ? OFFSET ?";
 	
 		Connection con = getConnection();

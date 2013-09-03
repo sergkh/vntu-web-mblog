@@ -33,7 +33,7 @@
 			    	    
 			    	    
 				    	<form action="${pageContext.request.contextPath}/moderator" method="POST">
-                            <input type="hidden" name="action" value="deletePost">
+                            <input type="hidden" name="action" value="disablePost">
                             <input type="hidden" name="postId" value="${msg.id}">
 							<button type="submit" class="btn btn-danger btn-mini pull-right"> <i class="icon-remove"></i> Заборонити</button>
 						</form>

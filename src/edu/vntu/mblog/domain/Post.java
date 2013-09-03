@@ -4,12 +4,17 @@ import java.util.Date;
 
 public class Post {
 	
+	
+	public enum State {
+		CONFIRMED, DISABLED, NOT_CONFIRMED;
+	}
+	
 	private long id;
 	private String authorLogin;
 	private String text;
 	private Date date;
 	private Date confirmDate;
-	private boolean confirmed;
+	private int state;
 	
 	public Post() {}
 
@@ -20,7 +25,7 @@ public class Post {
 		this.text = text;
 		this.date = date;
 		this.confirmDate=null;
-		confirmed=false;
+		this.state=State.NOT_CONFIRMED.ordinal();
 	}
 	
 	public long getId() {
@@ -62,14 +67,15 @@ public class Post {
 	public void setConfirmDate(Date confirmDate) {
 		this.confirmDate = confirmDate;
 	}
-
-	public boolean isConfirmed() {
-		return confirmed;
+	
+	public int getState() {
+		return state;
 	}
 
-	public void setConfirmed(boolean confirmed) {
-		this.confirmed = confirmed;
+	public void setState(int state) {
+		this.state = state;
 	}
+
 
 	@Override
 	public String toString() {

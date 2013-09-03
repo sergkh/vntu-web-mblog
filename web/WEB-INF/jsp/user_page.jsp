@@ -73,13 +73,22 @@
 		    			${msg.authorLogin}
 	    			</a>
 		    	</div>
-	  		    <div class="span9"><c:out value="${msg.text}"/></div>
-			    <div class="span2 timebadge">
-			    	<span class="badge pull-right">
-			    		<i class="icon-time"></i> <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${msg.date}"/>
+	  		    <div class="span9">
+<%-- 	  		    	<c:choose> --%>
+<%-- 					    <c:when test="${msg.state!=1}"> --%>
+				  		    <c:out value="${msg.text}"/>
+<%-- 						</c:when> --%>
+<%-- 			     		<c:otherwise> --%>
+<%-- 			     			<c:out value="Your message has been blocked by moderator (${msg.confirmDate})"/> --%>
+<%-- 			     		</c:otherwise> --%>
+<%-- 			     	</c:choose> --%>
+				</div>
+				<div class="span2 timebadge">
+					<span class="badge pull-right">
+						<i class="icon-time"></i> <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${msg.date}"/>
 			    	</span>
 			    </div>
-	    	    
+			     	
 		    </div>
 		    <hr/>
 	    

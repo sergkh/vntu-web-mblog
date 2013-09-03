@@ -8,12 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+//import javax.servlet.http.HttpSession;
 
-
-import javax.servlet.http.HttpSession;
-
-import edu.vntu.mblog.domain.User;
-import edu.vntu.mblog.errors.UserNotFoundException;
+import edu.vntu.mblog.domain.Post.State;
 //import edu.vntu.mblog.domain.User;
 //import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.errors.ValidationException;
@@ -55,55 +52,19 @@ public class ModeratorServlet extends HttpServlet {
         long postId = Long.parseLong(req.getParameter("postId"));
 
         switch (action) {
-            case "deletePost":
-
+            case "disablePost":
+            	postsService.validatePost(postId, State.DISABLED.ordinal());
                 break;
             case "confirmPost":
-                postsService.confirmPost();
+                postsService.validatePost(postId, State.CONFIRMED.ordinal());
                 break;
 
             default:
-                // TODO:
+            	resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown or missing action parameter value: " + action);
         }
 
         resp.sendRedirect(req.getContextPath() + "/moderator");
 
-
-//		String login = req.getParameter("msg.authorLogin");
-//		String text = req.getParameter("msg.text");
-//		
-//		
-//		
-//		try {
-//			postsService.confirmPost(login, text);
-//			
-//			resp.sendRedirect(req.getContextPath() + "/moderator");
-//		
-//		}
-//		catch (UserNotFoundException unfe) {
-//			unfe.printStackTrace();
-//			// TODO: show error page here
-//		}
-//		catch (ValidationException e) {
-//			// TODO and this
-//			e.printStackTrace();
-//		}
-//		 
 	}
-
-
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//super.doDelete(req, resp);
-		
-	}
-	
-	
-	
-	
-	
-
 
 }

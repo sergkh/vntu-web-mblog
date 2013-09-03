@@ -97,14 +97,13 @@ public class PostsService {
         }
     }
 
-    public void validatePost(long id, boolean confirm) {
+    public void validatePost(long id, int state) {
 
         cm.startTransaction();
         try {
 
-            if(confirm) postsDao.confirm(id);
-            else postsDao.delete(id);
-
+           postsDao.validate(id, state);
+           
             cm.commitTransaction();
         } catch (Exception e) {
             cm.rollbackTransaction();
