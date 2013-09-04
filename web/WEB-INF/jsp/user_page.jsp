@@ -35,8 +35,8 @@
                     <form id="add-avatar-form" class="form-inline" action="${pageContext.request.contextPath}/avatars"
                           method="POST" enctype="multipart/form-data">
 
-                        Виберіть аватару:<input type="file" name="imgfile"><br>
-                        <button type="submit">Змінити</button>
+                        Виберіть аватару: <input type="file" name="imgfile">
+                        <button class="btn" type="submit">Змінити</button>
                     </form>
                 </c:if>
 			</div>
@@ -50,14 +50,14 @@
 				<auth:hasPermission permissions="USER">
 					<c:choose>
 					    <c:when test="${subscribed}">
-					    	<form action="${pageContext.request.contextPath}/subscriptions/${user}" method="POST">
+					    	<form action="${pageContext.request.contextPath}/subscriptions/${user.login}" method="POST">
 					    		<input type="hidden" name="action" value="unsubscribe">
 								<button type="submit" class="btn btn-warning pull-right"> <i class="icon-star-empty"></i> Відписатись</button>
 							</form>
 					    </c:when>
 			
 					    <c:when test="${!subscribed && !isMe}">
-				    		<form action="${pageContext.request.contextPath}/subscriptions/${user}" method="POST">
+				    		<form action="${pageContext.request.contextPath}/subscriptions/${user.login}" method="POST">
 				    			<input type="hidden" name="action" value="subscribe">
 		        				<button type="submit" class="btn btn-success pull-right"> <i class="icon-star"></i> Підписатись</button>
 	        				</form>

@@ -38,7 +38,7 @@
             </auth:hasPermission>
             
             <auth:unregistered>
-            	<a href="${pageContext.request.contextPath}" class="btn btn-small pull-right">Реєстрація / Вхід</a>
+            	<a href="${pageContext.request.contextPath}/" class="btn btn-small pull-right">Реєстрація / Вхід</a>
             </auth:unregistered>
         </ul>
 

@@ -42,7 +42,11 @@ public class AvatarsServlet extends HttpServlet {
         String fileName = null;
 
         for (Part part : request.getParts()) {
-            fileName = user.getLogin() +  getFileExt(part);
+            String extension = getFileExt(part);
+            // filename not found possibly user didn't selected any file
+            if(extension == null) continue;
+
+            fileName = user.getLogin() + extension;
             part.write(dirName + File.separator + fileName);
         }
 
@@ -68,10 +72,12 @@ public class AvatarsServlet extends HttpServlet {
         for (String s : contentDisp.split(";")) {
             if (s.trim().startsWith("filename")) {
                 String filename = s.substring(s.indexOf("=") + 2, s.length()-1);
+                if(filename.isEmpty()) return null;
+
                 return filename.substring(filename.lastIndexOf('.')).toLowerCase();
             }
         }
 
-        return "";
+        return null;
     }
 }
