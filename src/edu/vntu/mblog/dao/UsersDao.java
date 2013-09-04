@@ -50,7 +50,22 @@ public class UsersDao extends AbstractDao {
 			throw new RuntimeException(e);
 		}
 	}
-	 
+
+    public void clearPermission(long userId, User.Permission role) {
+        String sql = "DELETE FROM user_permissions WHERE user_id = ? AND " +
+                "perm_id = (SELECT id FROM permissions WHERE name=?)";
+
+        Connection con = getConnection();
+
+        try (PreparedStatement createSt = con.prepareStatement(sql)) {
+            createSt.setLong(1, userId);
+            createSt.setString(2, role.name());
+            createSt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 	 public User getByLoginOrEmail(String identifier) {
 		String sql = "SELECT * FROM users WHERE login=? OR email=?";
 		Connection con = getConnection();

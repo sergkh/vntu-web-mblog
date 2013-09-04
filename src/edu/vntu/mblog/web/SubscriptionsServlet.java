@@ -43,14 +43,10 @@ public class SubscriptionsServlet extends HttpServlet {
 		try {
 			HttpSession session = req.getSession(false); 
 			User curUser = (User) session.getAttribute(SessionConstants.USER);
-			
-			if(addOrRemove) {
-				usersService.subscribe(login, curUser.getLogin());
-			} else {
-				usersService.unsubscribe(login, curUser.getLogin());
-			}
-			
-			// redirect back to users page.
+
+            usersService.toggleSubscription(login, curUser.getLogin(), addOrRemove);
+
+			// redirect back to users page
 			resp.sendRedirect(req.getContextPath() + "/users/"+ login);
 			
 		} catch (UserNotFoundException unfe) {

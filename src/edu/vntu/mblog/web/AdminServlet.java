@@ -35,4 +35,20 @@ public class AdminServlet extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/jsp/admin_users_list.jsp");
         view.forward(request, response);
 	}
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
+
+        switch(action) {
+            case "enableUser" :
+                // manageSubscription(req, resp, true);
+                break;
+            case "disableUser" :
+                // manageSubscription(req, resp, false);
+                break;
+            default:
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                               "Unknown or missing action parameter value: " + action);
+        }
+    }
 }

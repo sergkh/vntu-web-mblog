@@ -156,7 +156,8 @@ public class UsersService {
 		}
 	}
 	
-	public void subscribe(String followedLogin, String subscriberLogin) throws UserNotFoundException {
+	public void toggleSubscription(String followedLogin, String subscriberLogin, boolean subscribe)
+                                                                throws UserNotFoundException {
 		cm.startTransaction();
 		try {
 			
@@ -170,32 +171,12 @@ public class UsersService {
 			if(subscriber == null) {
 				throw new UserNotFoundException(subscriberLogin, "User not found");
 			}
-			
-			subscribersDao.subscribe(followed.getId(), subscriber.getId());
-			
-			cm.commitTransaction();
-		} catch (Exception e) {
-			cm.rollbackTransaction();
-			throw e;
-		}
-	}
-	
-	public void unsubscribe(String followedLogin, String subscriberLogin) throws UserNotFoundException {
-		cm.startTransaction();
-		try {
-			
-			User followed = usersDao.getByLoginOrEmail(followedLogin);
-			User subscriber = usersDao.getByLoginOrEmail(subscriberLogin);
-			
-			if(followed == null) {
-				throw new UserNotFoundException(followedLogin, "User not found");
-			}
-	
-			if(subscriber == null) {
-				throw new UserNotFoundException(subscriberLogin, "User not found");
-			}
-			
-			subscribersDao.unsubscribe(followed.getId(), subscriber.getId());
+
+            if(subscribe) {
+			    subscribersDao.subscribe(followed.getId(), subscriber.getId());
+            } else {
+                subscribersDao.unsubscribe(followed.getId(), subscriber.getId());
+            }
 			
 			cm.commitTransaction();
 		} catch (Exception e) {
@@ -203,6 +184,24 @@ public class UsersService {
 			throw e;
 		}
 	}
+
+
+    public void togglePermission(long userId, User.Permission permission, boolean addPerm) {
+        cm.startTransaction();
+        try {
+            if(addPerm) {
+                usersDao.addPermission(userId, permission);
+            } else {
+                usersDao.clearPermission(userId, permission);
+            }
+
+            cm.commitTransaction();
+        } catch (Exception e) {
+            cm.rollbackTransaction();
+            throw e;
+        }
+    }
+
 
     public User getUser(String login) {
         cm.startTransaction();
