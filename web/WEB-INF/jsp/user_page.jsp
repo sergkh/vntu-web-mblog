@@ -11,20 +11,40 @@
 	<div class="row-fluid">
 		<div class="span12 well">
 			<div class="span2">
-				<a href="#" >
-					<img src="http://placehold.it/128x128" alt="">
-				</a>
-			</div>
+
+                <c:choose>
+                    <c:when test="${user.avatar != null}">
+                        <img class="img-avatar img-circle" alt="User avatar"
+                             src="${pageContext.request.contextPath}/static/img/avatars/${user.avatar}">
+                    </c:when>
+                    <c:when test="${user.avatar == null}">
+                        <img class="image-avatar img-circle" alt="User avatar" src="http://placehold.it/128x128">
+                    </c:when>
+                </c:choose>
+
+            </div>
+
 			<div class="span8">
-				<h2><c:out value="${user}"/></h2><br/>
+				<h2><c:out value="${user.login}"/></h2><br/>
 				<span class="badge badge-warning">${userStat.posts} повідомлення(нь)</span> 
 				<span class=" badge badge-info">${userStat.followers}  підписчик(ів)</span> 
-				<span class=" badge badge-info">${userStat.following} підписок(а)</span> 
+				<span class=" badge badge-info">${userStat.following} підписок(а)</span>
+                <br/>
+
+                <c:if test="${isMe}">
+                    <form id="add-avatar-form" class="form-inline" action="${pageContext.request.contextPath}/avatars"
+                          method="POST" enctype="multipart/form-data">
+
+                        Виберіть аватару:<input type="file" name="imgfile"><br>
+                        <button type="submit">Змінити</button>
+                    </form>
+                </c:if>
 			</div>
 			<div class="span2">
 
     			<auth:unregistered>
-   					<a href="${pageContext.request.contextPath}/" class="btn btn-success pull-right"> <i class="icon-user"></i> Увійти </a>
+   					<a href="${pageContext.request.contextPath}/"
+                       class="btn btn-success pull-right"> <i class="icon-user"></i> Увійти </a>
 				</auth:unregistered>
 			
 				<auth:hasPermission permissions="USER">
@@ -36,7 +56,7 @@
 							</form>
 					    </c:when>
 			
-					    <c:when test="${!subscribed && sessionScope.user.login != user}">
+					    <c:when test="${!subscribed && !isMe}">
 				    		<form action="${pageContext.request.contextPath}/subscriptions/${user}" method="POST">
 				    			<input type="hidden" name="action" value="subscribe">
 		        				<button type="submit" class="btn btn-success pull-right"> <i class="icon-star"></i> Підписатись</button>
@@ -69,19 +89,23 @@
 		    <div class="row-fluid">
 		    	<div class="span1 text-center">
 		    		<a href="${pageContext.request.contextPath}/users/${msg.authorLogin}">
-		    			<img src="http://placehold.it/42x42" class="img-circle">
+
+                        <c:choose>
+                            <c:when test="${msg.authorAvatar != null}">
+                                <img class="img-avatar-small img-circle" alt="User avatar"
+                                     src="${pageContext.request.contextPath}/static/img/avatars/${msg.authorAvatar}">
+                            </c:when>
+                            <c:when test="${msg.authorAvatar == null}">
+                                <img class="img-avatar-small img-circle" alt="User avatar" src="http://placehold.it/128x128">
+                            </c:when>
+                        </c:choose>
+
+
 		    			${msg.authorLogin}
 	    			</a>
 		    	</div>
 	  		    <div class="span9">
-<%-- 	  		    	<c:choose> --%>
-<%-- 					    <c:when test="${msg.state!=1}"> --%>
-				  		    <c:out value="${msg.text}"/>
-<%-- 						</c:when> --%>
-<%-- 			     		<c:otherwise> --%>
-<%-- 			     			<c:out value="Your message has been blocked by moderator (${msg.confirmDate})"/> --%>
-<%-- 			     		</c:otherwise> --%>
-<%-- 			     	</c:choose> --%>
+                    <c:out value="${msg.text}"/>
 				</div>
 				<div class="span2 timebadge">
 					<span class="badge pull-right">

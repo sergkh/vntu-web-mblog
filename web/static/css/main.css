@@ -28,3 +28,17 @@ div.timebadge {
 	padding-right: 7px;	
 }
 
+.img-avatar {
+    width: 128px;
+    height: 128px;
+}
+
+.img-avatar-small {
+    width: 48px;
+    height: 48px;
+}
+
+#add-avatar-form {
+  margin: 20px 0 5px;
+}
+

@@ -17,21 +17,22 @@ public class User implements Serializable {
 	private String email;
 	private String passHash;
 	private Date blockDate;
-    private boolean hasAvatar;
+    private String avatar;
 	private EnumSet<Permission> permissions;
 	
 	public User(String login, String email, String passHash) {
-		this(0L, null, login, email, passHash, null);
+		this(0L, null, login, email, passHash, null, null);
 	}
 	
 	public User(long id, Date creationDate, String login, String email,
-			String passHash, Date blockDate) {
+			String passHash, Date blockDate, String avatar) {
 		this.id = id;
 		this.creationDate = creationDate;
 		this.login = login;
 		this.email = email;
 		this.passHash = passHash;
 		this.blockDate = blockDate;
+        this.avatar = avatar;
 	}
 	
 	public long getId() {
@@ -89,10 +90,14 @@ public class User implements Serializable {
 	}
 
     public boolean isHasAvatar() {
-        return hasAvatar;
+        return avatar != null;
     }
 
-    public void setHasAvatar(boolean hasAvatar) {
-        this.hasAvatar = hasAvatar;
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

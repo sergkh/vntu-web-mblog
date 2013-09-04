@@ -31,17 +31,21 @@ public class UserPageServlet extends HttpServlet {
 		String login = request.getPathInfo().replace("/", "");
 		
 		try {
-			request.setAttribute("user", login);
+
+            User user = usersService.getUser(login);
+
+			request.setAttribute("user", user);
 			request.setAttribute("userStat", usersService.getStatistics(login));
-			
-			
-			HttpSession session = request.getSession(false); 
+
+			HttpSession session = request.getSession(false);
 			
 			if(session != null && session.getAttribute(SessionConstants.USER) != null) {
                 User curUser = (User) session.getAttribute(SessionConstants.USER);
 				request.setAttribute("subscribed", usersService.isSubscribed(login, curUser.getLogin()));
+                request.setAttribute("isMe", login.equals(curUser.getLogin()));
 			} else {
 				request.setAttribute("subscribed", false);
+                request.setAttribute("isMe", false);
 			}
 			
 			request.setAttribute("posts", postsService.getUsersFeed(login));

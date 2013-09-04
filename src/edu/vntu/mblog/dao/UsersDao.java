@@ -95,13 +95,14 @@ public class UsersDao extends AbstractDao {
 		}
 	 }
 
-    public void setAvatarUploaded(long userId) {
-        String sql = "UPDATE users SET has_avatar = true WHERE id=?";
+    public void setAvatar(long userId, String fileName) {
+        String sql = "UPDATE users SET avatar=? WHERE id=?";
 
         Connection con = getConnection();
 
         try (PreparedStatement createSt = con.prepareStatement(sql)) {
-            createSt.setLong(1, userId);
+            createSt.setString(1, fileName);
+            createSt.setLong(2, userId);
             createSt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -143,7 +144,8 @@ public class UsersDao extends AbstractDao {
 				 rs.getString("login"), 
 				 rs.getString("email"),
 				 rs.getString("passhash"),
-				 rs.getTimestamp("blocked")
+				 rs.getTimestamp("blocked"),
+                 rs.getString("avatar")
 		 );
 	 }
 }

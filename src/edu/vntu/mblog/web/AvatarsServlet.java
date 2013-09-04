@@ -8,20 +8,22 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @WebServlet("/avatars")
 @MultipartConfig(fileSizeThreshold=5*1024*1024, // 5 MB
         maxFileSize=10*1024*1024,               // 10MB
         maxRequestSize=10*1024*1024)            // 10MB
-public class UserpicServlet extends HttpServlet {
+public class AvatarsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static final String AVATARS_DIR = "/static/img/avatars/";
 
     private final UsersService usersService = UsersService.getInstance();
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         getServletContext().log("User picture received");
 
         // gets absolute path of the web application and adds relative path to avatars
@@ -37,12 +39,16 @@ public class UserpicServlet extends HttpServlet {
 
         User user = (User) session.getAttribute(SessionConstants.USER);
 
+        String fileName = null;
+
         for (Part part : request.getParts()) {
-            String fileName = user.getLogin() +  getFileExt(part);
+            fileName = user.getLogin() +  getFileExt(part);
             part.write(dirName + File.separator + fileName);
         }
 
-        usersService.setAvatarUploaded(user.getId());
+        if(fileName != null) {
+            usersService.setAvatar(user.getId(), fileName);
+        }
 
         // redirect back to users home page
         response.sendRedirect(request.getContextPath() + "/users/" + user.getLogin());
@@ -62,7 +68,7 @@ public class UserpicServlet extends HttpServlet {
         for (String s : contentDisp.split(";")) {
             if (s.trim().startsWith("filename")) {
                 String filename = s.substring(s.indexOf("=") + 2, s.length()-1);
-                return filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+                return filename.substring(filename.lastIndexOf('.')).toLowerCase();
             }
         }
 

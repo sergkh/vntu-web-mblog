@@ -3,11 +3,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>403 - Доступ заборонено</title>
+<title>500 - Внутрішня помилка сервера</title>
 </head>
 <body>
-    <h1>403</h1>
-	Вибачте, але у вас немає дозволу для перегляду цієї сторінки.<br/> 
+    <h1>500</h1>
+	Вибачте, виникла внутрішня помилка сервера, спробуйте будь-ласка пізніше.<br/>
 	<a href="${pageContext.request.contextPath}">Перейти на головну.</a>
 </body>
 </html>

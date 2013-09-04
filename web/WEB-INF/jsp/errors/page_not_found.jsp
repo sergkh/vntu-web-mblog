@@ -3,10 +3,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Authentication failed</title>
+<title>404 - Сторінку не знайдено</title>
 </head>
 <body>
-	Вибачте але сторінку не знайдено.<br/> 
+	<h1>404</h1>
+    Вибачте але сторінку не знайдено.<br/>
 	<a href="${pageContext.request.contextPath}">Перейти на головну.</a>
 </body>
 </html>

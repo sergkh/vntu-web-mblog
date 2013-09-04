@@ -3,6 +3,7 @@ package edu.vntu.mblog.web.filters;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,10 +31,14 @@ public class ExceptionsFilter implements Filter {
             chain.doFilter(req, resp);
         } catch (Exception e) {
             HttpServletRequest httpReq = (HttpServletRequest) req;
+            HttpServletResponse httpResp = (HttpServletResponse) resp;
 
             log.log(Level.WARNING,
                     "Exception while processing request " + httpReq.getMethod() + ' ' + httpReq.getRequestURI(),
                     e);
+
+            httpResp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
         }
     }
 

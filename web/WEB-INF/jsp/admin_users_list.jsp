@@ -28,10 +28,19 @@
                   <td>
                     <c:choose>
                       <c:when test="${user.blockDate == null}">
-                        <button type="button" class="btn btn-success btn-mini"><i class="icon-remove"></i> Заблокувати</button>
+                          <form action="${pageContext.request.contextPath}/admin" method="POST">
+                              <input type="hidden" name="action" value="disableUser">
+                              <input type="hidden" name="postId" value="${user.id}">
+                              <button type="submit" class="btn btn-success btn-mini"><i class="icon-remove"></i> Заблокувати</button>
+                          </form>
                       </c:when>
                       <c:otherwise>
-                        <button type="button" class="btn btn-danger btn-mini"><i class="icon-ok"></i> Розблокувати</button>
+                          <form action="${pageContext.request.contextPath}/admin" method="POST">
+                              <input type="hidden" name="action" value="enableUser">
+                              <input type="hidden" name="postId" value="${user.id}">
+                              <button type="submit" class="btn btn-danger btn-mini"><i class="icon-ok"></i> Розблокувати</button>
+                          </form>
+
                       </c:otherwise>
                     </c:choose>
                   </td>

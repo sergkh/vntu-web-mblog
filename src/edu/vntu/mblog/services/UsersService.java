@@ -204,14 +204,28 @@ public class UsersService {
 		}
 	}
 
-    public void setAvatarUploaded(long userId) {
+    public User getUser(String login) {
         cm.startTransaction();
         try {
-            usersDao.setAvatarUploaded(userId);
+            User u = usersDao.getByLoginOrEmail(login);
+            cm.commitTransaction();
+            return u;
+        } catch (Exception e) {
+            cm.rollbackTransaction();
+            throw e;
+        }
+    }
+
+    public void setAvatar(long userId, String fileName) {
+        cm.startTransaction();
+        try {
+            usersDao.setAvatar(userId, fileName);
             cm.commitTransaction();
         } catch (Exception e) {
             cm.rollbackTransaction();
             throw e;
         }
     }
+
+
 }

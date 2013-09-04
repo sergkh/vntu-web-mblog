@@ -97,12 +97,12 @@ public class PostsService {
         }
     }
 
-    public void validatePost(long id, int state) {
+    public void moderatePost(long id, Post.State state) {
 
         cm.startTransaction();
         try {
 
-           postsDao.validate(id, state);
+           postsDao.moderate(id, state);
            
             cm.commitTransaction();
         } catch (Exception e) {

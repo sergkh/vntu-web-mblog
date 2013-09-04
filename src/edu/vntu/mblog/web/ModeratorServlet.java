@@ -53,14 +53,15 @@ public class ModeratorServlet extends HttpServlet {
 
         switch (action) {
             case "disablePost":
-            	postsService.validatePost(postId, State.DISABLED.ordinal());
+            	postsService.moderatePost(postId, State.DISABLED);
                 break;
             case "confirmPost":
-                postsService.validatePost(postId, State.CONFIRMED.ordinal());
+                postsService.moderatePost(postId, State.CONFIRMED);
                 break;
 
             default:
-            	resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown or missing action parameter value: " + action);
+            	resp.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                        "Unknown or missing action parameter value: " + action);
         }
 
         resp.sendRedirect(req.getContextPath() + "/moderator");

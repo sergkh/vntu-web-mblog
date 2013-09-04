@@ -6,26 +6,28 @@ public class Post {
 	
 	
 	public enum State {
-		CONFIRMED, DISABLED, NOT_CONFIRMED;
+		CONFIRMED, DISABLED, UNVALIDATED;
 	}
 	
 	private long id;
 	private String authorLogin;
+    private String authorAvatar;
 	private String text;
 	private Date date;
 	private Date confirmDate;
-	private int state;
+	private State state;
 	
 	public Post() {}
 
-	public Post(long id, String authorLogin, String text, Date date) {
+	public Post(long id, String authorLogin, String authorAvatar, String text, Date date) {
 		this();
 		this.id = id;
 		this.authorLogin = authorLogin;
+        this.authorAvatar = authorAvatar;
 		this.text = text;
 		this.date = date;
 		this.confirmDate=null;
-		this.state=State.NOT_CONFIRMED.ordinal();
+		this.state = State.UNVALIDATED;
 	}
 	
 	public long getId() {
@@ -68,21 +70,19 @@ public class Post {
 		this.confirmDate = confirmDate;
 	}
 	
-	public int getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 
+    public String getAuthorAvatar() {
+        return authorAvatar;
+    }
 
-	@Override
-	public String toString() {
-		return "Post [id=" + id + ", authorLogin=" + authorLogin + ", text="
-				+ text + ", date=" + date + ", confirmDate=" + confirmDate + "]";
-	}
-	
-	
-
+    public void setAuthorAvatar(String authorAvatar) {
+        this.authorAvatar = authorAvatar;
+    }
 }
