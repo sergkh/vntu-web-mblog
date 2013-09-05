@@ -30,14 +30,14 @@
                       <c:when test="${user.blockDate == null}">
                           <form action="${pageContext.request.contextPath}/admin" method="POST">
                               <input type="hidden" name="action" value="disableUser">
-                              <input type="hidden" name="postId" value="${user.id}">
+                              <input type="hidden" name="userId" value="${user.id}">
                               <button type="submit" class="btn btn-success btn-mini"><i class="icon-remove"></i> Заблокувати</button>
                           </form>
                       </c:when>
                       <c:otherwise>
                           <form action="${pageContext.request.contextPath}/admin" method="POST">
                               <input type="hidden" name="action" value="enableUser">
-                              <input type="hidden" name="postId" value="${user.id}">
+                              <input type="hidden" name="userId" value="${user.id}">
                               <button type="submit" class="btn btn-danger btn-mini"><i class="icon-ok"></i> Розблокувати</button>
                           </form>
 

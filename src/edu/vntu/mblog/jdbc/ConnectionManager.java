@@ -25,7 +25,9 @@ public class ConnectionManager {
 		@Override
 		protected Connection initialValue() {
 	        try {
-	            return dataSource.getConnection();
+                Connection c = dataSource.getConnection();
+                c.setAutoCommit(false);
+	            return c;
 	        } catch (Exception e) {
 	            throw new RuntimeException(e);
 	        }
@@ -53,15 +55,6 @@ public class ConnectionManager {
 	
     public Connection currentConnection() {
     	return threadLocalConnections.get();
-    }
-    
-    public void startTransaction() {
-    	Connection c = currentConnection();
-    	try {
-    		c.setAutoCommit(false);
-    	} catch (Exception e){
-    		throw new RuntimeException(e);
-    	}
     }
     
     public void commitTransaction() {

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.UsersService;
 
@@ -39,13 +40,28 @@ public class AdminServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
+        long userId = Long.parseLong(req.getParameter("userId"));
+
         switch(action) {
             case "enableUser" :
-                // manageSubscription(req, resp, true);
+                usersService.toggleUser(userId, true);
                 break;
             case "disableUser" :
-                // manageSubscription(req, resp, false);
+                usersService.toggleUser(userId, false);
                 break;
+            case "hireModerator" :
+                usersService.togglePermission(userId, User.Permission.MODERATE_POSTS, true);
+                break;
+            case "fireModerator" :
+                usersService.togglePermission(userId, User.Permission.MODERATE_POSTS, false);
+                break;
+            case "hireAdministrator" :
+                usersService.togglePermission(userId, User.Permission.MANAGE_USERS, true);
+                break;
+            case "fireAdministrator" :
+                usersService.togglePermission(userId, User.Permission.MANAGE_USERS, false);
+                break;
+
             default:
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST,
                                "Unknown or missing action parameter value: " + action);
