@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="auth"  uri="http://vntu.edu.ua/jsp/taglib/permchecker" %>
+
 <%@include file="includes/header.jsp" %>
 <%@include file="includes/navigation.jsp" %>
 
@@ -46,7 +48,10 @@
                   </td>
 
                   <td>
-                    <button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button>
+                  	<auth:hasPermission permissions="MANAGE_USERS" user="${user}">
+                  		<button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button>
+                  	</auth:hasPermission>
+                    
                   </td>
 
                 </tr>

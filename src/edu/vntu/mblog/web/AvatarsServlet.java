@@ -1,16 +1,19 @@
 package edu.vntu.mblog.web;
 
-import edu.vntu.mblog.domain.User;
-import edu.vntu.mblog.services.UsersService;
+import java.io.File;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+
+import edu.vntu.mblog.domain.User;
+import edu.vntu.mblog.services.UsersService;
 
 @WebServlet("/avatars")
 @MultipartConfig(fileSizeThreshold=5*1024*1024, // 5 MB

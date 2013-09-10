@@ -13,6 +13,7 @@ public class PermissionsTagHandler extends TagSupport {
 	private static final long serialVersionUID = -4953710291722438417L;
 	
 	private Permission permissions;
+	private User user;
 
 	public PermissionsTagHandler() {}
 
@@ -24,18 +25,32 @@ public class PermissionsTagHandler extends TagSupport {
 		this.permissions = Permission.valueOf(permissions.toUpperCase());
 	}
 	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Override
 	public int doStartTag() throws JspException {
-		HttpSession session = pageContext.getSession();
+		boolean result = false;
+
+		// If user object is set - check specified user, else 
+		// get user from current session
 		
-		if(session == null || session.getAttribute(SessionConstants.USER) == null) {
-			return SKIP_BODY;
+		if(user == null) {
+			HttpSession session = pageContext.getSession();
+			
+			if(session != null && session.getAttribute(SessionConstants.USER) != null) {
+		        User userToCheck = (User) session.getAttribute(SessionConstants.USER);
+				result = userToCheck.getPermissions().contains(permissions);
+			}
+			
+		} else {
+			result = user.getPermissions().contains(permissions);
 		}
-
-
-        User user = (User) session.getAttribute(SessionConstants.USER);
-
-		boolean result = user.getPermissions().contains(permissions);
 		
 		return result ? EVAL_BODY_INCLUDE : SKIP_BODY;
 	}

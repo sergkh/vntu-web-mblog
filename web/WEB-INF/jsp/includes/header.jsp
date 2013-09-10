@@ -10,5 +10,7 @@
     <script src="${pageContext.request.contextPath}/static/js/jquery-1.10.2.min.js"></script>
     <script src="${pageContext.request.contextPath}/static/js/bootstrap.js"></script>
 
+	<link rel="shortcut icon" href="${pageContext.request.contextPath}/static/img/favicon.ico" type="image/x-icon">
+	<link rel="icon"  href="${pageContext.request.contextPath}/static/img/favicon.ico" type="image/x-icon">
 </head>
 <body>

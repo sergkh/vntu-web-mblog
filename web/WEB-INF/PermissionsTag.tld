@@ -12,7 +12,13 @@
     <attribute>
       <name>permissions</name>
       <required>true</required>
-  	</attribute>    
+  	</attribute>
+  	
+ 	<attribute>
+      <name>user</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+  	</attribute>      
 </tag>
 
 <tag>
