@@ -9,7 +9,7 @@
 
         <div class="tab-content">
                 
-			<div class="tab-pane active in" id="login">
+			<div class="tab-pane fade active in" id="login">
                 <!-- Login -->
 	            <form action="${pageContext.request.contextPath}/login" method="POST">
 	            
