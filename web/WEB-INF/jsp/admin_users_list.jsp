@@ -15,19 +15,30 @@
                     <th>Пошта</th>
                     <th>Дата реєстрації</th>
                     <th>Дата блокування</th>
-                    <th style="width: 120px;"></th>
+                    <th style="width: 120px;">Стан</th>
                 </tr>
             </thead>
 
             <tbody>
               <c:forEach var="user" items="${users}">
                 <tr>
-                  <td><c:out value="${user.login}"/></td>
+                  <td class="text-center">
+                      <c:choose>
+                          <c:when test="${msg.authorAvatar != null}">
+                              <img class="img-avatar-small img-circle" alt="User avatar"
+                                   src="${pageContext.request.contextPath}/static/img/avatars/${msg.authorAvatar}">
+                          </c:when>
+                          <c:when test="${msg.authorAvatar == null}">
+                              <img class="img-avatar-small img-circle" alt="User avatar" src="http://placehold.it/128x128">
+                          </c:when>
+                      </c:choose>
+                      <c:out value="${user.login}"/>
+                  </td>
                   <td><c:out value="${user.email}"/></td>
                   <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${user.creationDate}"/></td>
                   <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${user.blockDate}"/></td>
 
-                  <td>
+                  <!--td>
                     <c:choose>
                       <c:when test="${user.blockDate == null}">
                           <form action="${pageContext.request.contextPath}/admin" method="POST">
@@ -45,13 +56,17 @@
 
                       </c:otherwise>
                     </c:choose>
-                  </td>
+                  </td-->
 
                   <td>
-                  	<auth:hasPermission permissions="MANAGE_USERS" user="${user}">
-                  		<button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button>
-                  	</auth:hasPermission>
-                    
+                      <div class="btn-group" data-toggle="buttons-radio">
+                          <button class="btn btn-mini">Заблокований</button>
+                          <button class="btn btn-mini">Користувач</button>
+                          <button class="btn btn-mini">Модератор</button>
+                          <button class="btn btn-mini">Адмін</button>
+                      </div>
+
+                    <!-- button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button -->
                   </td>
 
                 </tr>
