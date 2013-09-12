@@ -18,7 +18,13 @@
       <name>user</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-  	</attribute>      
+  	</attribute>
+
+    <attribute>
+        <name>invert</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+    </attribute>
 </tag>
 
 <tag>

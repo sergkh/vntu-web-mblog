@@ -15,14 +15,15 @@
                     <th>Пошта</th>
                     <th>Дата реєстрації</th>
                     <th>Дата блокування</th>
-                    <th style="width: 120px;">Стан</th>
+                    <th>Дозволи</th>
+                    <th></th>
                 </tr>
             </thead>
 
             <tbody>
               <c:forEach var="user" items="${users}">
                 <tr>
-                  <td class="text-center">
+                  <td>
                       <c:choose>
                           <c:when test="${msg.authorAvatar != null}">
                               <img class="img-avatar-small img-circle" alt="User avatar"
@@ -32,6 +33,7 @@
                               <img class="img-avatar-small img-circle" alt="User avatar" src="http://placehold.it/128x128">
                           </c:when>
                       </c:choose>
+                      <br/>
                       <c:out value="${user.login}"/>
                   </td>
                   <td><c:out value="${user.email}"/></td>
@@ -59,15 +61,53 @@
                   </td-->
 
                   <td>
-                      <div class="btn-group" data-toggle="buttons-radio">
+                    <c:out value="${user.permissions}"/>
+
+                      <!-- div class="btn-group" data-toggle="buttons-radio">
                           <button class="btn btn-mini">Заблокований</button>
                           <button class="btn btn-mini">Користувач</button>
                           <button class="btn btn-mini">Модератор</button>
                           <button class="btn btn-mini">Адмін</button>
-                      </div>
+                      </div-->
 
                     <!-- button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button -->
                   </td>
+
+                  <td>
+                      <div class="btn-group">
+                          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                              <i class="icon-pencil"></i>
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <c:choose>
+                                <c:when test="${user.blockDate == null}">
+                                    <li><a href="#">Заблокувати</a></li>
+                                </c:when>
+                              <c:otherwise>
+                                  <li><a href="#">Розблокувати</a></li>
+                              </c:otherwise>
+                              </c:choose>
+
+                              <auth:hasPermission permissions="MODERATE_POSTS" user="${user}">
+                                  <li><a href="#">З модераторів</a></li>
+                              </auth:hasPermission>
+
+                              <auth:hasPermission permissions="MODERATE_POSTS" user="${user}" invert="true">
+                                  <li><a href="#">В модератори</a></li>
+                              </auth:hasPermission>
+
+                              <auth:hasPermission permissions="MANAGE_USERS" user="${user}">
+                                  <li><a href="#">З адміністраторів</a></li>
+                              </auth:hasPermission>
+
+                              <auth:hasPermission permissions="MANAGE_USERS" user="${user}" invert="true">
+                                  <li><a href="#">В адміністратори</a></li>
+                              </auth:hasPermission>
+                          </ul>
+                      </div>
+                  </td>
+
 
                 </tr>
               </c:forEach>

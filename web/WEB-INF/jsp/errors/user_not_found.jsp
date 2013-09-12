@@ -8,6 +8,6 @@
 </head>
 <body>
 	Вибачте, але користувача з логіном <c:out value="${user}"/> не знайдено.<br/> 
-	<a href="${pageContext.request.contextPath}">Перейти на головну.</a>
+	<a href="${pageContext.request.contextPath}/">Перейти на головну.</a>
 </body>
 </html>
