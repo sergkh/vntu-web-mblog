@@ -20,9 +20,9 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="users-table">
               <c:forEach var="user" items="${users}">
-                <tr>
+                <tr data-user="${user.id}">
                   <td>
                       <c:choose>
                           <c:when test="${msg.authorAvatar != null}">
@@ -40,40 +40,15 @@
                   <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${user.creationDate}"/></td>
                   <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${user.blockDate}"/></td>
 
-                  <!--td>
-                    <c:choose>
-                      <c:when test="${user.blockDate == null}">
-                          <form action="${pageContext.request.contextPath}/admin" method="POST">
-                              <input type="hidden" name="action" value="disableUser">
-                              <input type="hidden" name="userId" value="${user.id}">
-                              <button type="submit" class="btn btn-success btn-mini"><i class="icon-remove"></i> Заблокувати</button>
-                          </form>
-                      </c:when>
-                      <c:otherwise>
-                          <form action="${pageContext.request.contextPath}/admin" method="POST">
-                              <input type="hidden" name="action" value="enableUser">
-                              <input type="hidden" name="userId" value="${user.id}">
-                              <button type="submit" class="btn btn-danger btn-mini"><i class="icon-ok"></i> Розблокувати</button>
-                          </form>
+                  <td class="permissions">
+                    <!-- c:out value=" $ { user . permissions }"/ -->
+                    <c:forEach var="perm" items="${user.permissionsNames}">
+                        <span class="badge"><c:out value="${perm}"/></span>
+                    </c:forEach>
 
-                      </c:otherwise>
-                    </c:choose>
-                  </td-->
-
-                  <td>
-                    <c:out value="${user.permissions}"/>
-
-                      <!-- div class="btn-group" data-toggle="buttons-radio">
-                          <button class="btn btn-mini">Заблокований</button>
-                          <button class="btn btn-mini">Користувач</button>
-                          <button class="btn btn-mini">Модератор</button>
-                          <button class="btn btn-mini">Адмін</button>
-                      </div-->
-
-                    <!-- button type="button" class="btn btn-mini"><i class="icon-arrow-up"></i> В модератори</button -->
                   </td>
 
-                  <td>
+                  <td class="user-manage-buttons">
                       <div class="btn-group">
                           <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                               <i class="icon-pencil"></i>
@@ -82,27 +57,47 @@
                           <ul class="dropdown-menu">
                               <c:choose>
                                 <c:when test="${user.blockDate == null}">
-                                    <li><a href="#">Заблокувати</a></li>
+                                    <li><a href="#"
+                                           onclick="return manageUser(${user.id}, 'block');">
+                                        Заблокувати
+                                        </a>
+                                    </li>
                                 </c:when>
                               <c:otherwise>
-                                  <li><a href="#">Розблокувати</a></li>
+                                  <li>
+                                    <a href="#" onclick="return manageUser(${user.id}, 'unblock');">
+                                      Розблокувати
+                                    </a>
+                                  </li>
                               </c:otherwise>
                               </c:choose>
 
                               <auth:hasPermission permissions="MODERATE_POSTS" user="${user}">
-                                  <li><a href="#">З модераторів</a></li>
+                                  <li><a href="#" data-permission="MODERATE_POSTS" data-action="removePermission">
+                                      <i class="icon-remove"></i> MODERATE_POSTS
+                                      </a>
+                                  </li>
                               </auth:hasPermission>
 
                               <auth:hasPermission permissions="MODERATE_POSTS" user="${user}" invert="true">
-                                  <li><a href="#">В модератори</a></li>
+                                  <li><a href="#" data-permission="MODERATE_POSTS" data-action="addPermission">
+                                      <i class="icon-plus"></i> MODERATE_POSTS
+                                      </a>
+                                  </li>
                               </auth:hasPermission>
 
                               <auth:hasPermission permissions="MANAGE_USERS" user="${user}">
-                                  <li><a href="#">З адміністраторів</a></li>
+                                  <li><a href="#" data-permission="MANAGE_USERS" data-action="removePermission">
+                                      <i class="icon-remove"></i> MANAGE_USERS
+                                      </a>
+                                  </li>
                               </auth:hasPermission>
 
                               <auth:hasPermission permissions="MANAGE_USERS" user="${user}" invert="true">
-                                  <li><a href="#">В адміністратори</a></li>
+                                  <li><a href="#" data-permission="MANAGE_USERS" data-action="addPermission">
+                                      <i class="icon-plus"></i> MANAGE_USERS
+                                  </a>
+                                  </li>
                               </auth:hasPermission>
                           </ul>
                       </div>

@@ -1,8 +1,10 @@
 package edu.vntu.mblog.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.List;
 
 public class User implements Serializable {
 	private static final long serialVersionUID = -961884833081701094L;
@@ -88,6 +90,16 @@ public class User implements Serializable {
 	public void setPermissions(EnumSet<Permission> permissions) {
 		this.permissions = permissions;
 	}
+
+    public List<String> getPermissionsNames() {
+        List<String> list = new ArrayList<>(permissions.size());
+
+        for(Permission p: permissions) {
+            list.add(p.name());
+        }
+
+        return list;
+    }
 
     public boolean isHasAvatar() {
         return avatar != null;

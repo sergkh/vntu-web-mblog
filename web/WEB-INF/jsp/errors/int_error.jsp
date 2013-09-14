@@ -8,6 +8,6 @@
 <body>
     <h1>500</h1>
 	Вибачте, виникла внутрішня помилка сервера, спробуйте будь-ласка пізніше.<br/>
-	<a href="${pageContext.request.contextPath}">Перейти на головну.</a>
+	<a href="${pageContext.request.contextPath}/">Перейти на головну.</a>
 </body>
 </html>

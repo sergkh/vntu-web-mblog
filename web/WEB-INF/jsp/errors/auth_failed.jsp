@@ -8,6 +8,6 @@
 <body>
     <h1>403</h1>
 	Вибачте, але у вас немає дозволу для перегляду цієї сторінки.<br/> 
-	<a href="${pageContext.request.contextPath}">Перейти на головну.</a>
+	<a href="${pageContext.request.contextPath}/">Перейти на головну.</a>
 </body>
 </html>
