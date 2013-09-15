@@ -58,14 +58,14 @@
                               <c:choose>
                                 <c:when test="${user.blockDate == null}">
                                     <li><a href="#"
-                                           onclick="return manageUser(${user.id}, 'block');">
+                                           onclick="return manageUser(this, ${user.id});" data-action="block">
                                         Заблокувати
                                         </a>
                                     </li>
                                 </c:when>
                               <c:otherwise>
                                   <li>
-                                    <a href="#" onclick="return manageUser(${user.id}, 'unblock');">
+                                    <a href="#" onclick="return manageUser(this, ${user.id});" data-action="unblock">
                                       Розблокувати
                                     </a>
                                   </li>
@@ -73,28 +73,32 @@
                               </c:choose>
 
                               <auth:hasPermission permissions="MODERATE_POSTS" user="${user}">
-                                  <li><a href="#" data-permission="MODERATE_POSTS" data-action="removePermission">
+                                  <li><a href="#" class="permissions-link"
+                                         data-permission="MODERATE_POSTS" data-action="removePermission">
                                       <i class="icon-remove"></i> MODERATE_POSTS
                                       </a>
                                   </li>
                               </auth:hasPermission>
 
                               <auth:hasPermission permissions="MODERATE_POSTS" user="${user}" invert="true">
-                                  <li><a href="#" data-permission="MODERATE_POSTS" data-action="addPermission">
+                                  <li><a href="#" class="permissions-link"
+                                         data-permission="MODERATE_POSTS" data-action="addPermission">
                                       <i class="icon-plus"></i> MODERATE_POSTS
                                       </a>
                                   </li>
                               </auth:hasPermission>
 
                               <auth:hasPermission permissions="MANAGE_USERS" user="${user}">
-                                  <li><a href="#" data-permission="MANAGE_USERS" data-action="removePermission">
+                                  <li><a href="#" class="permissions-link"
+                                         data-permission="MANAGE_USERS" data-action="removePermission">
                                       <i class="icon-remove"></i> MANAGE_USERS
                                       </a>
                                   </li>
                               </auth:hasPermission>
 
                               <auth:hasPermission permissions="MANAGE_USERS" user="${user}" invert="true">
-                                  <li><a href="#" data-permission="MANAGE_USERS" data-action="addPermission">
+                                  <li><a href="#" class="permissions-link"
+                                         data-permission="MANAGE_USERS" data-action="addPermission">
                                       <i class="icon-plus"></i> MANAGE_USERS
                                   </a>
                                   </li>
