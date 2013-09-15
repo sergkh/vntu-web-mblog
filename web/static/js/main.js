@@ -36,7 +36,10 @@ $(function() {
     $('#users-table tr').each(function() {
         var row = $(this);  // wrap DOM element in jQuery object
 
-        row.on('click', 'a.permissions-link', function(evt){
+        row.on('click', 'a.permissions-link', function(evt) {
+            // block link triggering
+            evt.preventDefault();
+
             var link = $(this);
 
             var req = {
