@@ -1,1 +1,0 @@
-INDEX VERSION 1.126+C:\Users\Oksana\git\vntu-web-mblog\.metadata\.plugins\org.eclipse.jdt.core
