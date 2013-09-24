@@ -5,6 +5,7 @@ out
 .classpath
 .project
 .settings
+.metadata
 
 # Package Files #
 # *.jar
