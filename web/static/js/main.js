@@ -17,7 +17,7 @@ function manageUser(linkEl, userId) {
             // invert action
             var newAction = (link.data("action") == 'block') ? 'unblock' : 'block';
             // set new text
-            var newText = (newAction == 'block') ? 'Заблокувати' : 'Розблокувати';
+            var newText = (newAction == 'block') ? 'Р—Р°Р±Р»РѕРєСѓРІР°С‚Рё' : 'Р РѕР·Р±Р»РѕРєСѓРІР°С‚Рё';
 
             link.data("action", newAction).html(newText);
         },
@@ -29,10 +29,6 @@ function manageUser(linkEl, userId) {
 }
 
 $(function() {
-    /*
-     * Second approach: find elements from DOM and add click listener.
-     * 'data-xxx' attributes can be added to pass element specific data.
-     */
     $('#users-table tr').each(function() {
         var row = $(this);  // wrap DOM element in jQuery object
 
@@ -76,42 +72,28 @@ $(function() {
      * Second approach: find elements from DOM and add click listener.
      * 'data-xxx' attributes can be added to pass element specific data.
      */
-   // $('form input #register-login').blur(function() {
-	 $('#register form input[name=login]').blur(function() {
-        //var input = $(this).find('input[name=login]');  // wrap DOM element in jQuery object
-		 var input = $(this);
-		// alert(input.val());
-		 $('#register form').find('#register-login-error').text("");
-        
-                var req = {
-                "login" : input.val(),
-                "exists" : input.data("exists")
-                };
-                //alert(input.data("exists"));
+    $('#register form input[name=login]').blur(function() {
+        var input = $(this);
 
-            $.post(
-            		baseUrl + '/validate', 
-            		req,
-            		function(data) {
-            			//alert(data.exists);
-                
-		              if (data.exists == true) {          	
-		            	  //var txt = 'Цей логін вже зайнято. Спробуйте інший.'; 
-		            	  var txt = 'Choose another login!';
-		            	  //alert(txt);
-		            	  // input.append('<p class="">' + txt + '</p>');
-		            	  //$('#register form p #register-login-error').text(txt);
-		            	  $('#register-login-error').text(txt);
-		            	  input.val("");
-		               } 
-		              
-		            },
-		            'json'
-            );
-            
-            return false;
-        
-            
-        });
-    
+        $('#register form').find('#register-login-error').text("");
+
+        $.post(
+            baseUrl + '/validate',
+            { "login" : input.val() },
+            function(data) {
+                if (data.exists) {
+                    var txt = 'Choose another login!';
+                    $('#register-login-error').text(txt);
+                    // don't clear input:  input.val("");
+                }
+
+            },
+            'json'
+        );
+
+        return false;
+
+
     });
+
+});

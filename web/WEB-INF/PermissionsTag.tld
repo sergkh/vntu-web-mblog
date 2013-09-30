@@ -2,7 +2,7 @@
 <tlibversion>1.0</tlibversion>
 <jspversion>1.1</jspversion>
 <shortname>permchecker</shortname>
-<info>Sample taglib for Substr operation</info>
+<info>Taglib for Authorization validation</info>
 <uri>http://vntu.edu.ua/jsp/taglib/permchecker</uri>
 
 <tag>

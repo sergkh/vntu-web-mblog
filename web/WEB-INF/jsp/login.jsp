@@ -47,8 +47,7 @@
                         <label class="control-label" for="register-login">Логін</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-user"></i></span>
-                            <input id="register-login" name="login" placeholder="user123" data-exists="false" class="input-large" required="" type="text">
-<!--                             <p id="register-login-error" class="error-block text-error text-center">OKOKOKOKOKOKOK</p> -->
+                            <input id="register-login" name="login" placeholder="user123" class="input-large" required="" type="text">
                         </div>
                     </div>
 					
