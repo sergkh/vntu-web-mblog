@@ -37,6 +37,7 @@ public class RegisterServlet extends HttpServlet {
 			s.setAttribute(SessionConstants.USER, user);
 
 			response.sendRedirect(request.getContextPath() + "/users/"+ login);
+			
 		} catch (ValidationException ve) {
 			ve.printStackTrace(); // TODO: handle exception
 		}

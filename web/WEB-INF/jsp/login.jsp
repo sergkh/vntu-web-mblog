@@ -38,23 +38,26 @@
             
             <div class="tab-pane fade" id="register">
 	            <!-- Registration -->
-	            <form action="${pageContext.request.contextPath}/register" method="POST">
+	            <form action="${pageContext.request.contextPath}/register" method="POST">                   
+                    
+                    <div id="register-login-error" class="error-block text-error text-center"></div>
+                    
                     <div class="control-group">
                         <!-- Username -->
                         <label class="control-label" for="register-login">Логін</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-user"></i></span>
-                            <input id="register-login" name="login" placeholder="user123" class="input-large" required="" type="text">
-                            <p id="register-login-error" class="error-block"></p>
+                            <input id="register-login" name="login" placeholder="user123" data-exists="false" class="input-large" required="" type="text">
+<!--                             <p id="register-login-error" class="error-block text-error text-center">OKOKOKOKOKOKOK</p> -->
                         </div>
                     </div>
-
+					
                     <div class="control-group">
                         <!-- Email -->
                         <label class="control-label" for="register-email">Електронна пошта</label>
                         <div class="controls input-prepend">
                             <span class="add-on"><i class="icon-envelope"></i></span>
-                            <input id="register-email" name="email" placeholder="user@mail.com" class="input-large" required="" type="text">
+                            <input id="register-email" name="email" placeholder="user@mail.com" data-exists="false" class="input-large" required="" type="text">
                             <p id="register-email-error" class="error-block"></p>
                         </div>
                     </div>

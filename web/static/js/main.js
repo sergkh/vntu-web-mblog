@@ -8,7 +8,7 @@ function manageUser(linkEl, userId) {
     var request = {
         "userId" : userId,
         "action" : link.data("action")
-    }
+    };
 
     $.post(
         baseUrl + '/admin',
@@ -17,7 +17,7 @@ function manageUser(linkEl, userId) {
             // invert action
             var newAction = (link.data("action") == 'block') ? 'unblock' : 'block';
             // set new text
-            var newText = (newAction == 'block') ? 'Р—Р°Р±Р»РѕРєСѓРІР°С‚Рё' : 'Р РѕР·Р±Р»РѕРєСѓРІР°С‚Рё';
+            var newText = (newAction == 'block') ? 'Заблокувати' : 'Розблокувати';
 
             link.data("action", newAction).html(newText);
         },
@@ -43,10 +43,10 @@ $(function() {
             var link = $(this);
 
             var req = {
-                "userId" : row.data("user"),
+                "userId" : row.val("user"),
                 "action" : link.data("action"),
                 "permission" : link.data("permission")
-            }
+            };
 
             $.post(baseUrl + '/admin', req, function() {
                 var cell = row.find('td.permissions');
@@ -64,7 +64,54 @@ $(function() {
                         .html('<i class="icon-plus"></i> ' + req.permission);
                 }
 
-            })
+            });
         });
     });
 });
+
+
+
+$(function() {
+    /*
+     * Second approach: find elements from DOM and add click listener.
+     * 'data-xxx' attributes can be added to pass element specific data.
+     */
+   // $('form input #register-login').blur(function() {
+	 $('#register form input[name=login]').blur(function() {
+        //var input = $(this).find('input[name=login]');  // wrap DOM element in jQuery object
+		 var input = $(this);
+		// alert(input.val());
+		 $('#register form').find('#register-login-error').text("");
+        
+                var req = {
+                "login" : input.val(),
+                "exists" : input.data("exists")
+                };
+                //alert(input.data("exists"));
+
+            $.post(
+            		baseUrl + '/validate', 
+            		req,
+            		function(data) {
+            			//alert(data.exists);
+                
+		              if (data.exists == true) {          	
+		            	  //var txt = 'Цей логін вже зайнято. Спробуйте інший.'; 
+		            	  var txt = 'Choose another login!';
+		            	  //alert(txt);
+		            	  // input.append('<p class="">' + txt + '</p>');
+		            	  //$('#register form p #register-login-error').text(txt);
+		            	  $('#register-login-error').text(txt);
+		            	  input.val("");
+		               } 
+		              
+		            },
+		            'json'
+            );
+            
+            return false;
+        
+            
+        });
+    
+    });
