@@ -188,80 +188,9 @@ DOM бібліотеки після розбору документу будую
 Текст (Text)
 : представляє текстові дані, які містяться в елементі або атрибуті.
 
-
-The root is the DOM always document.documentElement. This special property will give access to the topmost HTML tag.
-
-Another starting point can be the document.body, which represents the BODY tag.
-
-Both entry points are valid. But document.body can be null.
-
-For example, you access document.body from an inline script in the HEAD, prepare to see null instead. That’s natural, because there is no BODY yet.
-
-
-An element keeps references to children in childNodes array-like property.
-All nodes are referenced, including whitespace ones (excepts IE<9).
-
-	function go() {
-        var childNodes = document.body.childNodes
- 
-        for(var i=0; i<childNodes.length; i++) {
-            alert(childNodes[i])
-        }
-    }
-
-children
-Sometimes we need to browse only element nodes, skipping text nodes. That’s what the children property is for.
-
-It contains all element nodes. Check out the same example as above, but with children instead of childNodes.
-
-	function go() {
-	    var children = document.body.children
-	    for(var i=0; i<children.length; i++) {
-	        alert(children[i])
-	    }
-	}
-
-	var body = document.body
-
-	alert(body.firstChild === body.childNodes[0])
-	alert(body.lastChild === body.childNodes[body.childNodes.length-1])
-
-
-	alert( document.body.innerHTML ); // read current contents
-	document.body.innerHTML = 'Yaaahooo!' // replace contents
-
-Для деяких елементів innerHTML є тільки для читання.
-
-elem.hasAttribute(name) - checks if the attribute exists
-elem.getAttribute(name) - gets an attribute value
-elem.setAttribute(name, value) - sets an attribute
-elem.removeAttribute(name) - removes an attribute
-
-input.value == input.getAttribute('value') - значення елементу вводу
-input.checked == input.getAttribute('checked') - значення чекбоксу
-
-var div = document.createElement('div');
-
-elem.cloneNode(true)
-Clones an element deeply, with all descendants.
-
-elem.cloneNode(false)
-Clones an element only, with attributes, but without children.
-
-parentElem.appendChild(elem)
-	Appends elem to the children of parentElem.
-
-parentElem.insertBefore(elem, nextSibling)
-	Inserts elem into the children of parentElem before the element nextSibling.
-
-parentElem.removeChild(elem)
-	Remove the elem from the children of parentElem.
-
-parentElem.replaceChild(elem, currentElem)
-	Replace the child element of parentElem, referenced by currentElem with the elem.
+TODO
 
 Пошук елементів
-
 
 var elem = document.getElementById('planets')
 var firstSpan = elem.getElementsByTagName('span')[0];
@@ -283,14 +212,5 @@ var elements = document.querySelectorAll('#planets > span')
 
 Антон Шевчук http://anton.shevchuk.name/jquery-book/
 
-$('#test') //знаходимо елемент з id="test" 
-    .text('Клікни по мені')  //встановлюємо текст елемента рівним "Клікни по мені"
-    .addClass('myAlert')     //додаємо клас "myAlert"
-    .css('color','red')      //встановлюємо колір тексту червоним
-    .attr('alert','Привіт, світе!') // додаємо атрибут "alert" із значенням "Привіт, світе!"
-    .bind(                       // додаємо в обробник події click функцію, яка відкриє модальне
-        'click',                 // вікно із текстом, що вказаний в атрибуті "alert" ("Привіт, світе!")
-        function(){alert($(this).attr('alert'))}
-    );
 
 
