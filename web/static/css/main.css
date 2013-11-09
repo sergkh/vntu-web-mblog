@@ -42,3 +42,7 @@ div.timebadge {
   margin: 20px 0 5px;
 }
 
+#register-login-error, 
+#register-password-error{
+	display: none;
+}

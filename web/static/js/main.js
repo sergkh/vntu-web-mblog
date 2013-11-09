@@ -66,25 +66,54 @@ $(function() {
 });
 
 
+/*
+ * Second approach: find elements from DOM and add click listener.
+ * 'data-xxx' attributes can be added to pass element specific data.
+ */
+//$(function() {
+//    
+//    $('#register form input[name=login]').blur(function() {
+//        var input = $(this);
+//
+//        $('#register form').find('#register-login-error').text("");
+//
+//        $.post(
+//            baseUrl + '/validate',
+//            { "login" : input.val() },
+//            function(data) {
+//                if (data.exists) {
+//                    var txt = 'Choose another login!';
+//                    $('#register-login-error').text(txt);
+//                    // don't clear input:  input.val("");
+//                }
+//
+//            },
+//            'json'
+//        );
+//
+//        return false;
+//
+//
+//    });
+//
+//});
 
 $(function() {
-    /*
-     * Second approach: find elements from DOM and add click listener.
-     * 'data-xxx' attributes can be added to pass element specific data.
-     */
+    
     $('#register form input[name=login]').blur(function() {
         var input = $(this);
-
-        $('#register form').find('#register-login-error').text("");
 
         $.post(
             baseUrl + '/validate',
             { "login" : input.val() },
             function(data) {
                 if (data.exists) {
-                    var txt = 'Choose another login!';
-                    $('#register-login-error').text(txt);
-                    // don't clear input:  input.val("");
+//                    var txt = 'Choose another login!';
+//                    $('#register-login-error').text(txt);
+                	$('#register-login-error').show();
+                }
+                else {
+                	$('#register-login-error').hide();
                 }
 
             },
@@ -95,5 +124,30 @@ $(function() {
 
 
     });
+    
+    
+    $('#register form input[name=password]').blur(function() {
+        var input = $(this);
+
+        $.post(
+            baseUrl + '/validate',
+            { "password" : input.val() },
+            function(data) {
+                if (!data.r_pass) {
+                	$('#register-password-error').show();
+                }
+                else {
+                	$('#register-password-error').hide();
+                }
+
+            },
+            'json'
+        );
+
+        return false;
+
+
+    });
+
 
 });

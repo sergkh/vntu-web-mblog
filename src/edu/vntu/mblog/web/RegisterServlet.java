@@ -12,6 +12,7 @@ import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.UsersService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * Date: 8/13/13, 10:57 AM
@@ -39,7 +40,9 @@ public class RegisterServlet extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/users/"+ login);
 			
 		} catch (ValidationException ve) {
-			ve.printStackTrace(); // TODO: handle exception
+			ve.printStackTrace();
+			response.sendRedirect(request.getContextPath() + 
+					"?errorMsg=" + URLEncoder.encode(ve.getMessage(), "UTF-8"));	
 		}
 		
 		

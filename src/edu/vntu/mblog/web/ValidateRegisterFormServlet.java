@@ -14,7 +14,7 @@ import java.io.IOException;
 
 
 @WebServlet(value = "/validate")
-public class LoginExistingServlet extends HttpServlet {
+public class ValidateRegisterFormServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7828326412316643125L;
 
@@ -22,18 +22,31 @@ public class LoginExistingServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("login");
+		String password = request.getParameter("password");
 		//String exists = request.getParameter("exists");
 		    
-		User user = usersService.getUser(login);    
+		if(login!=null){
+			User user = usersService.getUser(login);    
+				
+				if(user != null) {
+	              // request.setAttribute("exists", "true");
+	               response.getWriter().println("{ \"exists\" : true }");
+				} 
+				else {
+					//request.setAttribute("exists", "false");
+					response.getWriter().println("{ \"exists\" : false }");
+				}
+		}
+		else if(password!=null){
+			final int len = password.length();
+			 if (len >= 6 && len <= Integer.MAX_VALUE){
+				 response.getWriter().println("{ \"r_pass\" : true }");
+			 }
+			 else{
+				 response.getWriter().println("{ \"r_pass\" : false }");
+			 }
 			
-			if(user != null) {
-              // request.setAttribute("exists", "true");
-               response.getWriter().println("{ \"exists\" : true }");
-			} 
-			else {
-				//request.setAttribute("exists", "false");
-				response.getWriter().println("{ \"exists\" : false }");
-			}
+		}
 			
 		
     }

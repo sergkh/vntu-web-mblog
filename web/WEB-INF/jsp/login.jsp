@@ -40,7 +40,9 @@
 	            <!-- Registration -->
 	            <form action="${pageContext.request.contextPath}/register" method="POST">                   
                     
-                    <div id="register-login-error" class="error-block text-error text-center"></div>
+                    <div id="register-login-error" class="error-block text-error text-center">Choose another login!</div>
+                    <div id="register-password-error" class="error-block text-error text-center">Min. length is 6!</div>
+                    
                     
                     <div class="control-group">
                         <!-- Username -->
@@ -61,6 +63,7 @@
                         </div>
                     </div>
 
+                    
                     <div class="control-group">
                         <!-- Password -->
                         <label class="control-label" for="session-login">Пароль</label>
