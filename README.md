@@ -12,3 +12,4 @@
 9. [Javascript](https://github.com/sergkh/vntu-web-mblog/blob/lections/09-javascript.md)
 10. [Javascript OOP](https://github.com/sergkh/vntu-web-mblog/blob/lections/10-js-oop.md) 
 11. [Events](https://github.com/sergkh/vntu-web-mblog/blob/lections/11-js-events.md)
+12. [AJAX](https://github.com/sergkh/vntu-web-mblog/blob/lections/12-ajax.md)
