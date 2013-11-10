@@ -133,11 +133,10 @@ $(function() {
             baseUrl + '/validate',
             { "password" : input.val() },
             function(data) {
-                if (!data.r_pass) {
-                	$('#register-password-error').show();
-                }
-                else {
-                	$('#register-password-error').hide();
+                if (data.valid) {
+                    $('#register-password-error').hide();
+                } else {
+                    $('#register-password-error').show();
                 }
 
             },

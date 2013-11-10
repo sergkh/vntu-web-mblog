@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
 			HttpSession s = request.getSession();
 			s.setAttribute(SessionConstants.USER, user);
 
-			response.sendRedirect(request.getContextPath() + "/users/"+ login);	
+			response.sendRedirect(request.getContextPath() + "/users/"+ login);
 
 		} catch (AuthenticationExeption authEx) {
 			authEx.printStackTrace();
