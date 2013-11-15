@@ -165,41 +165,90 @@ DOM (англ. Document Object Model - Об'єктна модель докуме
 
 DOM бібліотеки після розбору документу будують дерево об’єктів, де коренем є сам документ, у якого зазвичай є один піделемент - кореневий елемент документу, й у нього є список дочірніх піделементів, які вже представляють HTML-теги сторінки, у кожного піделементу також є список дочірніх елементів. У кожного з елементів DOM визначено набір методів та атрибутів, які дозволяють керувати цим елементом - змінювати атрибути тегу, вміст чи навіть переносити елемент по дереву. 
 
-В javascript браузер будує й оновлює DOM-дерево автоматично, тому змінюючи DOM-елемент з javascript, наприклад змінюючи значення атрибуту `width` - браузер одразу відобразить зміни на сторінці - змінить довжину елементу. Представлено DOM-дерево поточного документу через передвизначений об’єкт `document`. У нього зазвичай використовують 2 піделементи: 
+> Ще одним поширеним підходом до роботи зі структурованими документами є SAX - підхід, при якому документ представляється як потік даних - аналізатор послідовно розбираючи документ генерує повідомлення, які містять елементи документу, які він розібрав. Зазвичай такі парсери менш зручні у використанні, однак при правильній реалізації потребують значно менше пам’яті.
 
-> Ще одним поширеним підходом до роботи зі структурованими документами є SAX - підхід, при якому під час 
+В javascript браузер будує й оновлює DOM-дерево автоматично, тому змінюючи DOM-елемент з javascript, наприклад змінюючи значення атрибуту `width` - браузер одразу відобразить зміни на сторінці - змінить довжину елементу. Представлено DOM-дерево поточного документу через передвизначений об’єкт `document`. У нього зазвичай використовують 2 піделементи: `document.documentElement` - який відповідає кореню документу, тобто тегу `<html>` та `document.body`, що відповідає тегу `<body>`. 
 
+Кожен елемент має посилання на масив дочірніх елементів:
 
+        var childNodes = document.body.children;
+ 
+        for(var i = 0; i < childNodes.length; i++) {
+            alert(childNodes[i])
+        }
 
-Після аналізу структурованого документа, будується його представлення у вигляді дерева. Дерево, в моделі DOM, складається із множини зв'язних вузлів (Node) різних типів. Як правило, розрізняють вузли наступних типів: `document.documentElement` - який відповідає кореню документу, тобто тегу `<html>` та `document.body`, що відповідає тегу `<body>`. У них можна 
+У кожного з елементів масив `childNodes[i]` є список його дочірніх елементів й так далі. Однак шукати елемент таким чином не дуже зручно, тому існують додаткові функції пошуку елементу в дереві:
 
-Документ (Document)
-: корінь дерева, представляє цілий документ.
+	var planets = document.getElementById('planets');
+	var firstSpan = planets.getElementsByTagName('span')[0];
+	var elements = document.querySelectorAll('#planets>span');
 
-Фрагмент документа (DocumentFragment)
-: вузол, який є корнем піддерева основного документа.
+Перший вираз знайде елемент за ідентифікатором, `firstSpan` буде відповідати першому тегу `<span>` всередині тегу `planets` (однак кине виключення, якщо жодного тегу `<span>` не всередині `planets` не буде знайдено). Третій варіант демонструє пошук елементу за CSS селектором.
 
-Елемент (Element)
-: представляє окремий елемент HTML або XML документа.
+Коли елемент, який необхідно змінити знайдено, можливо над ним виконувати певні дії, наприклад нехай є HTML код:
 
-Атрибут (Attr)
-: представляє атрибут елемента.
+	<div id="error-text">old text</div>
 
-Текст (Text)
-: представляє текстові дані, які містяться в елементі або атрибуті.
+Можна переглянути та змінити вміст елементу:
 
-TODO
+	var errorDiv = document.getElementById('error-text');
+	alert(errorDiv.innerHTML ); // покаже 'old text'
+	errorDiv.innerHTML = 'OK';  // змінить вміст на 'OK'
 
-Пошук елементів
+Можливо доступатись не тільки до вмісту тегу, а й його атрибутів:
 
-var elem = document.getElementById('planets')
-var firstSpan = elem.getElementsByTagName('span')[0];
+`element.hasAttribute(name)`
+: повертає true, якщо у елементу встановлено атрибут з іменем `name`:
 
-var elements = document.querySelectorAll('#planets > span')
+		var hasId = errorDiv.hasAttribute('id'); // = true
 
+`element.getAttribute(name)`
+: повертає значення атрибуту, якщо встановлено, у вигляді тексту.
+
+		var id = errorDiv.getAttribute('id'); // 'error-text'
+
+`element.setAttribute(name, value)`
+: встановлює нове значення `value` атрибуту з іменем `name`. Встановимо клас `success` знайденому елементу:
+	
+		errorDiv.setArribute('class', 'success');
+
+`element.removeAttribute(name)`
+: видаляє атрибут з іменем `name`. Щоб видалити атрибут `class`:
+
+		errorDiv.removeArribute('class');
+
+Для деяких атрибутів існують скорочення, наприклад для тегів `<input>`:
+
+	input.value == input.getAttribute('value'); // значення елементу вводу
+	input.checked == input.getAttribute('checked'); // значення чекбоксу
+
+Для того щоб додати елемент в документ, необхідно його створити, для чого є відповідний метод у документа:
+
+	var li = document.createElement('li');
+	li.innerHtml = 'Новий елемент';
+	document.getElementById('items-list').appendChild(li);
+
+Також додаткові функції для додавання елементів:
+
+elem.cloneNode(deepCopy)
+: клонує елемент, якщо `deepCopy=true`, то клонуються також всі піделементи даного, якщо ж `deepCopy=false`, то клонується тільки даний елемент без дочірніх.
+
+parentElem.appendChild(elem)
+: додає елемент `elem` до `parentElem`.
+
+parentElem.insertBefore(elem, nextSibling);
+: додає елемент `elem` до `parentElem` перед елементом `nextSibling`.
+
+parentElem.removeChild(elem)
+: видаляє елемент `elem` з батьківського `parentElem`.
+
+parentElem.replaceChild(elem, currentElem)
+: заміняє елемент `currentElem` елементом `elem` у батьківському елементі `parentElem`.
 
 Бібліотека jQuery
 --------
+
+Підключення:
 
 <script type="text/javascript" src="jquery.js"></script>
 
@@ -207,10 +256,6 @@ var elements = document.querySelectorAll('#planets > span')
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
-
 Найкраще jQuery описана в книзі Эрла Каслдайна та Крейга Шаркі - "JQuery Novice to Ninja"
 
-Антон Шевчук http://anton.shevchuk.name/jquery-book/
-
-
-
+Або ж у [Антона Шевчука](http://anton.shevchuk.name/jquery-book/)
