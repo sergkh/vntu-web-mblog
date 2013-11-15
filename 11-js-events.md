@@ -230,19 +230,19 @@ DOM бібліотеки після розбору документу будую
 
 Також додаткові функції для додавання елементів:
 
-elem.cloneNode(deepCopy)
+`elem.cloneNode(deepCopy)`
 : клонує елемент, якщо `deepCopy=true`, то клонуються також всі піделементи даного, якщо ж `deepCopy=false`, то клонується тільки даний елемент без дочірніх.
 
-parentElem.appendChild(elem)
+`parentElem.appendChild(elem)`
 : додає елемент `elem` до `parentElem`.
 
-parentElem.insertBefore(elem, nextSibling);
+`parentElem.insertBefore(elem, nextSibling)`
 : додає елемент `elem` до `parentElem` перед елементом `nextSibling`.
 
-parentElem.removeChild(elem)
+`parentElem.removeChild(elem)`
 : видаляє елемент `elem` з батьківського `parentElem`.
 
-parentElem.replaceChild(elem, currentElem)
+`parentElem.replaceChild(elem, currentElem)`
 : заміняє елемент `currentElem` елементом `elem` у батьківському елементі `parentElem`.
 
 Бібліотека jQuery
