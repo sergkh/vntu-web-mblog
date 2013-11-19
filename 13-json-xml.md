@@ -161,54 +161,54 @@ ______
 -------------
 
 HTML:
+	
+	<table id="users-table">
+	<thead>
+	  <tr>
+	      <td>ID</td>
+	      <td>Ім’я</td>
+	      <td>Пошта</td>
+	      <td>Особиста сторінка</td>
+	  </tr>
+	</thead>
+	
+	<tbody></tbody>
+	</table>
 
-  <table id="users-table">
-      <thead>
-          <tr>
-              <td>ID</td>
-              <td>Ім’я</td>
-              <td>Пошта</td>
-              <td>Особиста сторінка</td>
-          </tr>
-      </thead>
-      
-      <tbody></tbody>
-  </table>
-  
-  <script id="user-row-template" type="text/html">
-      <tr>
-          <td>${id}</td>
-          <td>${name}</td>
-          <td>${email}</td>
-          <td><a href="/users/${id}">Users link</a></td>
-      </tr>
-  </script>
+	<script id="user-row-template" type="text/html">
+  	  <tr>
+	    <td>${id}</td>
+	    <td>${name}</td>
+	    <td>${email}</td>
+	    <td><a href="/users/${id}">Users link</a></td>
+	  </tr>
+	</script>
 
 Javascript:
-
-  function renderTpl(id, obj) {
-      var tpl = $(id).text();
-      return tpl.replace(/\$\{(.+)\}/g, function(match, contents) {
-          return obj[contents] || '';
-      });
-  }
-
-  var users = [
-      {
-          id : 1,
-          name : 'Anna',
-          email : 'anna@yahoo.com'
-      },
-      {
-          id : 2,
-          name : 'Arsen',
-          email : 'arsen@yandex.ru'
-      }
-  ];
-
-  jQuery.each(users, function(i, val) {
-    $('#users-table>tbody').append(renderTpl('#user-row-template', val));    
-  });
+	
+	function renderTpl(id, obj) {
+	  var tpl = $(id).text();
+	  return tpl.replace(/\$\{(.+)\}/g, function(match, contents) {
+	    return obj[contents] || '';
+	  });
+	}
+	
+	var users = [
+	  {
+	    id : 1,
+	    name : 'Anna',
+	    email : 'anna@yahoo.com'
+	  },
+	  {
+  	    id : 2,
+	    name : 'Arsen',
+	    email : 'arsen@yandex.ru'
+	  }
+	];
+	
+	jQuery.each(users, function(i, val) {
+	  $('#users-table>tbody').append(renderTpl('#user-row-template', val));    
+	});
 
 
 Приклад можна спробувати на [jsfiddle](http://jsfiddle.net/6CM6B/)
