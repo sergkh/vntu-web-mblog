@@ -3,23 +3,19 @@ package edu.vntu.mblog.web;
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.UsersService;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Servlet implementation class AdminServlet
  */
 @WebServlet("/admin")
-public class AdminServlet extends HttpServlet {
+public class AdminServlet extends AbstractMblogSpringServlet {
 	private static final long serialVersionUID = 1L;
     
 	private static final int USERS_LIMIT = 100;
@@ -29,8 +25,7 @@ public class AdminServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-        usersService = context.getBean(UsersService.class);
+        usersService = getBean(UsersService.class);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,14 +13,12 @@ import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.services.PostsService;
 import edu.vntu.mblog.services.UsersService;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * 
  */
 @WebServlet("/users/*")
-public class UserPageServlet extends HttpServlet {
+public class UserPageServlet extends AbstractMblogSpringServlet {
 	private static final long serialVersionUID = 3203753443583716314L;
 	
 	private PostsService postsService;
@@ -30,9 +27,8 @@ public class UserPageServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-        usersService = context.getBean(UsersService.class);
-        postsService = context.getBean(PostsService.class);
+        usersService = getBean(UsersService.class);
+        postsService = getBean(PostsService.class);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

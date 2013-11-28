@@ -2,7 +2,6 @@ package edu.vntu.mblog.web;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -10,8 +9,6 @@ import javax.servlet.http.HttpSession;
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.AuthenticationExeption;
 import edu.vntu.mblog.services.UsersService;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -22,7 +19,7 @@ import java.net.URLEncoder;
  * @author Sergey Khruschak (sergey.khruschak@gmail.com)
  */
 @WebServlet(value = "/login")
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends AbstractMblogSpringServlet {
 
 	private static final long serialVersionUID = 7828326412316643125L;
 
@@ -31,8 +28,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-        usersService = context.getBean(UsersService.class);
+        usersService = getBean(UsersService.class);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
