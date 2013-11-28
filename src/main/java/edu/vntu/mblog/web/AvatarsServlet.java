@@ -6,7 +6,6 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,12 +18,18 @@ import edu.vntu.mblog.services.UsersService;
 @MultipartConfig(fileSizeThreshold=5*1024*1024, // 5 MB
         maxFileSize=10*1024*1024,               // 10MB
         maxRequestSize=10*1024*1024)            // 10MB
-public class AvatarsServlet extends HttpServlet {
+public class AvatarsServlet extends AbstractMblogSpringServlet{
     private static final long serialVersionUID = 1L;
 
     private static final String AVATARS_DIR = "/static/img/avatars/";
 
-    private final UsersService usersService = UsersService.getInstance();
+    private UsersService usersService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        usersService = getBean(UsersService.class);
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         getServletContext().log("User picture received");

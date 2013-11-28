@@ -2,7 +2,6 @@ package edu.vntu.mblog.web;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,13 +19,19 @@ import java.net.URLEncoder;
  * @author Sergey Khruschak (sergey.khruschak@gmail.com)
  */
 @WebServlet(value = "/login")
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends AbstractMblogSpringServlet {
 
 	private static final long serialVersionUID = 7828326412316643125L;
 
-	private final UsersService usersService = UsersService.getInstance();
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private UsersService usersService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        usersService = getBean(UsersService.class);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("session-login");
 		String password = request.getParameter("session-password");
 		
