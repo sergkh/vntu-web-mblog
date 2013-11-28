@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.services.UsersService;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.io.IOException;
 
@@ -19,11 +21,18 @@ public class ValidateRegisterFormServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7828326412316643125L;
 
-	private final UsersService usersService = UsersService.getInstance();
+	private UsersService usersService;
 
     private final ObjectMapper serializer = new ObjectMapper();
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        usersService = context.getBean(UsersService.class);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("login");
 		String password = request.getParameter("password");
 		//String exists = request.getParameter("exists");

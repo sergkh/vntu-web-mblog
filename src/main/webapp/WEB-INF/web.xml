@@ -9,5 +9,14 @@
     <error-code>404</error-code>
     <location>/WEB-INF/jsp/errors/page_not_found.jsp</location>
   </error-page>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/web-context.xml</param-value>
+    </context-param>
   
 </web-app>

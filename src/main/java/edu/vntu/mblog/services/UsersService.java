@@ -28,16 +28,11 @@ public class UsersService {
 
     private static final UsersService instance = new UsersService();
 
-    private final UsersDao usersDao = new UsersDao();
-    private final UserSubscribersDao subscribersDao = new UserSubscribersDao();
-    private final PostsDao postsDao = new PostsDao();
+    private UsersDao usersDao;
+    private UserSubscribersDao subscribersDao;
+    private PostsDao postsDao;
 
-    private final ConnectionManager cm = ConnectionManager.getInstance();
-    private UsersService() {}
-
-    public static UsersService getInstance() {
-        return instance;
-    }
+    private ConnectionManager connectionManager;
 
     public User register(String login, String email, String password) throws ValidationException {
         validateLen("login", login, 3, 128);
@@ -53,9 +48,9 @@ public class UsersService {
         try {
             usersDao.create(u);
             usersDao.addPermission(u.getId(), User.Permission.USER);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
 
@@ -72,11 +67,11 @@ public class UsersService {
                 throw new AuthenticationExeption("Wrong login or password");
             }
 
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
 
             return user;
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -91,11 +86,11 @@ public class UsersService {
         try {
 
             List<User> users = usersDao.getAllUsers(offset, limit);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
 
             return users;
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -117,11 +112,11 @@ public class UsersService {
                     subscribersDao.getFollowersCount(userId),
                     subscribersDao.getFollowingCount(userId));
 
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
 
             return stat;
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -142,11 +137,11 @@ public class UsersService {
 
             boolean result = subscribersDao.isSubscribed(followed.getId(), subscriber.getId());
 
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
 
             return result;
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -172,9 +167,9 @@ public class UsersService {
                 subscribersDao.unsubscribe(followed.getId(), subscriber.getId());
             }
 
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -188,9 +183,9 @@ public class UsersService {
                 usersDao.clearPermission(userId, permission);
             }
 
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -198,9 +193,9 @@ public class UsersService {
     public void toggleUser(long userId, boolean block) {
         try {
             usersDao.toggleUserBlock(userId, block);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -208,10 +203,10 @@ public class UsersService {
     public User getUser(String login) {
         try {
             User u = usersDao.getByLoginOrEmail(login);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
             return u;
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -219,12 +214,26 @@ public class UsersService {
     public void setAvatar(long userId, String fileName) {
         try {
             usersDao.setAvatar(userId, fileName);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
 
+    public void setUsersDao(UsersDao usersDao) {
+        this.usersDao = usersDao;
+    }
 
+    public void setSubscribersDao(UserSubscribersDao subscribersDao) {
+        this.subscribersDao = subscribersDao;
+    }
+
+    public void setPostsDao(PostsDao postsDao) {
+        this.postsDao = postsDao;
+    }
+
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 }

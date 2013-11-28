@@ -14,6 +14,8 @@ import javax.servlet.http.Part;
 
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.services.UsersService;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 @WebServlet("/avatars")
 @MultipartConfig(fileSizeThreshold=5*1024*1024, // 5 MB
@@ -24,7 +26,14 @@ public class AvatarsServlet extends HttpServlet {
 
     private static final String AVATARS_DIR = "/static/img/avatars/";
 
-    private final UsersService usersService = UsersService.getInstance();
+    private UsersService usersService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        usersService = context.getBean(UsersService.class);
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         getServletContext().log("User picture received");

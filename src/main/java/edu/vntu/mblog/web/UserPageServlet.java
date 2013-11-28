@@ -14,6 +14,8 @@ import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.services.PostsService;
 import edu.vntu.mblog.services.UsersService;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * 
@@ -22,10 +24,18 @@ import edu.vntu.mblog.services.UsersService;
 public class UserPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 3203753443583716314L;
 	
-	private final PostsService postsService = PostsService.getInstance();
-	private final UsersService usersService = UsersService.getInstance();
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private PostsService postsService;
+	private UsersService usersService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        usersService = context.getBean(UsersService.class);
+        postsService = context.getBean(PostsService.class);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		getServletContext().log("Rendering users page");
 		
 		String login = request.getPathInfo().replace("/", "");

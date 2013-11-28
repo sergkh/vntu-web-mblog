@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="connectionManager" class="edu.vntu.mblog.jdbc.ConnectionManager" init-method="getInstance"/>
+
+    <bean id="postsDao" class="edu.vntu.mblog.dao.PostsDao" autowire="byType">
+        <property name="connectionManager" ref="connectionManager"/>
+    </bean>
+
+    <bean id="usersDao" class="edu.vntu.mblog.dao.UsersDao">
+        <property name="connectionManager" ref="connectionManager"/>
+    </bean>
+
+    <bean id="userSubscribersDao" class="edu.vntu.mblog.dao.UserSubscribersDao">
+        <property name="connectionManager" ref="connectionManager"/>
+    </bean>
+
+    <bean id="postsService" class="edu.vntu.mblog.services.PostsService" autowire="byType"/>
+    <bean id="usersService" class="edu.vntu.mblog.services.UsersService" autowire="byType"/>
+
+</beans>

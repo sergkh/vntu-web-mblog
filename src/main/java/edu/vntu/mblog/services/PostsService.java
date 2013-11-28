@@ -22,16 +22,10 @@ import edu.vntu.mblog.jdbc.ConnectionManager;
 public class PostsService {
     private static final PostsService instance = new PostsService();
 
-    private final PostsDao postsDao = new PostsDao();
-    private final UsersDao usersDao = new UsersDao();
+    private PostsDao postsDao;
+    private UsersDao usersDao;
 
     private final ConnectionManager cm = ConnectionManager.getInstance();
-
-    private PostsService() {}
-
-    public static PostsService getInstance() {
-        return instance;
-    }
 
     public void createPost(String userLogin, String post) throws UserNotFoundException, ValidationException {
         validateLen("post", post, 3, 512);
@@ -99,6 +93,13 @@ public class PostsService {
         }
     }
 
+    public void setPostsDao(PostsDao postsDao) {
+        this.postsDao = postsDao;
+    }
+
+    public void setUsersDao(UsersDao usersDao) {
+        this.usersDao = usersDao;
+    }
 }
 
 

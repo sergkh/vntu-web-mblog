@@ -9,8 +9,10 @@ import edu.vntu.mblog.jdbc.ConnectionManager;
  */
 public class AbstractDao {
 
+    private ConnectionManager connectionManager;
+
     protected Connection getConnection() {
-        return ConnectionManager.getInstance().currentConnection();
+        return connectionManager.currentConnection();
     }
 
     protected void close(AutoCloseable... closeables) {
@@ -26,5 +28,9 @@ public class AbstractDao {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 }

@@ -14,15 +14,24 @@ import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.PostsService;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 @WebServlet("/messages")
 public class PostsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-	private final PostsService postsService = PostsService.getInstance();
+	private PostsService postsService;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        postsService = context.getBean(PostsService.class);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String text = request.getParameter("text");
 		
 		HttpSession s = request.getSession();

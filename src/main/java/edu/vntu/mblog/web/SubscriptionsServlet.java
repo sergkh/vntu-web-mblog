@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.services.UsersService;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Servlet implementation class SubscriptionsServlet
@@ -21,9 +23,16 @@ import edu.vntu.mblog.services.UsersService;
 public class SubscriptionsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private final UsersService usersService = UsersService.getInstance();
-	
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private UsersService usersService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        usersService = context.getBean(UsersService.class);
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String action = req.getParameter("action");
 		
 		switch(action) {

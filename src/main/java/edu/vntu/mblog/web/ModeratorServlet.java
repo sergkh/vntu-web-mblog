@@ -15,6 +15,9 @@ import edu.vntu.mblog.domain.Post.State;
 //import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.PostsService;
+import edu.vntu.mblog.services.UsersService;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 //import edu.vntu.mblog.services.UsersService;
 
 /**
@@ -27,7 +30,14 @@ public class ModeratorServlet extends HttpServlet {
 	private static final int POSTS_LIMIT = 100;
 	
 	//private final UsersService usersService = UsersService.getInstance();
-	private final PostsService postsService = PostsService.getInstance();
+	private PostsService postsService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        postsService = context.getBean(PostsService.class);
+    }
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
