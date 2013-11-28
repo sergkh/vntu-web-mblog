@@ -1,237 +1,47 @@
-/**
- *
- */
 package edu.vntu.mblog.services;
 
-import static edu.vntu.mblog.util.ValidationUtils.validateEmail;
-import static edu.vntu.mblog.util.ValidationUtils.validateLen;
-
-import java.util.EnumSet;
-import java.util.List;
-
-import edu.vntu.mblog.dao.PostsDao;
-import edu.vntu.mblog.dao.UserSubscribersDao;
-import edu.vntu.mblog.dao.UsersDao;
+import edu.vntu.mblog.dao.jdbc.PostsJdbcDao;
+import edu.vntu.mblog.dao.jdbc.UserSubscribersJdbcDao;
+import edu.vntu.mblog.dao.jdbc.UsersJdbcDao;
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.domain.UserStatistics;
 import edu.vntu.mblog.errors.AuthenticationExeption;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.errors.ValidationException;
-import edu.vntu.mblog.jdbc.ConnectionManager;
-import edu.vntu.mblog.util.SecurityUtils;
+
+import java.util.List;
 
 /**
  *
- * @author sergey
+ * User: sergey
+ * Date: 11/28/13, 10:20 PM
  */
-public class UsersService {
+public interface UsersService {
 
-    private UsersDao usersDao;
-    private UserSubscribersDao subscribersDao;
-    private PostsDao postsDao;
+    User register(String login, String email, String password) throws ValidationException;
 
-    private ConnectionManager connectionManager;
+    User login(String loginOrEmail, String password) throws AuthenticationExeption;
 
-    public User register(String login, String email, String password) throws ValidationException {
-        validateLen("login", login, 3, 128);
-        validateLen("email", email, 3, 128);
-        validateEmail("email", email);
-        validateLen("password", password, 6, Integer.MAX_VALUE);
+    List<User> getUsersList(int offset, int limit) throws ValidationException;
 
-        String passHash = SecurityUtils.digest(password);
+    UserStatistics getStatistics(String loginOrEmail) throws UserNotFoundException;
 
-        User u = new User(login, email, passHash);
-        u.setPermissions(EnumSet.of(User.Permission.USER));
+    boolean isSubscribed(String followedLogin, String subscriberLogin) throws UserNotFoundException;
 
-        try {
-            usersDao.create(u);
-            usersDao.addPermission(u.getId(), User.Permission.USER);
-            connectionManager.commitTransaction();
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
+    void toggleSubscription(String followedLogin, String subscriberLogin, boolean subscribe)
+            throws UserNotFoundException;
 
-        return u;
-    }
+    void togglePermission(long userId, User.Permission permission, boolean addPerm);
 
-    public User login(String loginOrEmail, String password) throws AuthenticationExeption {
-        String passHash = SecurityUtils.digest(password);
+    void toggleUser(long userId, boolean block);
 
-        try {
-            User user = usersDao.getByLoginOrEmail(loginOrEmail);
+    User getUser(String login);
 
-            if(user == null || !user.getPassHash().equals(passHash)) {
-                throw new AuthenticationExeption("Wrong login or password");
-            }
+    void setAvatar(long userId, String fileName);
 
-            connectionManager.commitTransaction();
+    void setUsersDao(UsersJdbcDao usersDao);
 
-            return user;
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
+    void setSubscribersDao(UserSubscribersJdbcDao subscribersDao);
 
-    public List<User> getUsersList(int offset, int limit) throws ValidationException {
-        if(offset < 0)
-            throw new ValidationException("offset", "Offset can't be negative");
-
-        if(limit < 0)
-            throw new ValidationException("limit", "Limit can't be negative");
-
-        try {
-
-            List<User> users = usersDao.getAllUsers(offset, limit);
-            connectionManager.commitTransaction();
-
-            return users;
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-
-    public UserStatistics getStatistics(String loginOrEmail) throws UserNotFoundException {
-        try {
-
-            User u = usersDao.getByLoginOrEmail(loginOrEmail);
-
-            if(u == null) {
-                throw new UserNotFoundException(loginOrEmail, "User not found");
-            }
-
-            long userId = u.getId();
-
-            UserStatistics stat = new UserStatistics(
-                    postsDao.getCountForUser(userId),
-                    subscribersDao.getFollowersCount(userId),
-                    subscribersDao.getFollowingCount(userId));
-
-            connectionManager.commitTransaction();
-
-            return stat;
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public boolean isSubscribed(String followedLogin, String subscriberLogin) throws UserNotFoundException {
-        try {
-
-            User followed = usersDao.getByLoginOrEmail(followedLogin);
-            User subscriber = usersDao.getByLoginOrEmail(subscriberLogin);
-
-            if(followed == null) {
-                throw new UserNotFoundException(followedLogin, "User not found");
-            }
-
-            if(subscriber == null) {
-                throw new UserNotFoundException(subscriberLogin, "User not found");
-            }
-
-            boolean result = subscribersDao.isSubscribed(followed.getId(), subscriber.getId());
-
-            connectionManager.commitTransaction();
-
-            return result;
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public void toggleSubscription(String followedLogin, String subscriberLogin, boolean subscribe)
-            throws UserNotFoundException {
-        try {
-
-            User followed = usersDao.getByLoginOrEmail(followedLogin);
-            User subscriber = usersDao.getByLoginOrEmail(subscriberLogin);
-
-            if(followed == null) {
-                throw new UserNotFoundException(followedLogin, "User not found");
-            }
-
-            if(subscriber == null) {
-                throw new UserNotFoundException(subscriberLogin, "User not found");
-            }
-
-            if(subscribe) {
-                subscribersDao.subscribe(followed.getId(), subscriber.getId());
-            } else {
-                subscribersDao.unsubscribe(followed.getId(), subscriber.getId());
-            }
-
-            connectionManager.commitTransaction();
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-
-    public void togglePermission(long userId, User.Permission permission, boolean addPerm) {
-        try {
-            if(addPerm) {
-                usersDao.addPermission(userId, permission);
-            } else {
-                usersDao.clearPermission(userId, permission);
-            }
-
-            connectionManager.commitTransaction();
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public void toggleUser(long userId, boolean block) {
-        try {
-            usersDao.toggleUserBlock(userId, block);
-            connectionManager.commitTransaction();
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public User getUser(String login) {
-        try {
-            User u = usersDao.getByLoginOrEmail(login);
-            connectionManager.commitTransaction();
-            return u;
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public void setAvatar(long userId, String fileName) {
-        try {
-            usersDao.setAvatar(userId, fileName);
-            connectionManager.commitTransaction();
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public void setUsersDao(UsersDao usersDao) {
-        this.usersDao = usersDao;
-    }
-
-    public void setSubscribersDao(UserSubscribersDao subscribersDao) {
-        this.subscribersDao = subscribersDao;
-    }
-
-    public void setPostsDao(PostsDao postsDao) {
-        this.postsDao = postsDao;
-    }
-
-    public void setConnectionManager(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
-    }
+    void setPostsDao(PostsJdbcDao postsDao);
 }

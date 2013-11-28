@@ -1,6 +1,9 @@
 package edu.vntu.mblog.web;
 
-import java.io.IOException;
+import edu.vntu.mblog.domain.User;
+import edu.vntu.mblog.errors.UserNotFoundException;
+import edu.vntu.mblog.services.PostsService;
+import edu.vntu.mblog.services.UsersService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,11 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import edu.vntu.mblog.domain.User;
-import edu.vntu.mblog.errors.UserNotFoundException;
-import edu.vntu.mblog.services.PostsService;
-import edu.vntu.mblog.services.UsersService;
+import java.io.IOException;
 
 /**
  * 

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.ValidationException;
 import edu.vntu.mblog.services.UsersService;
+import edu.vntu.mblog.services.impl.UsersServiceImpl;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -31,7 +32,9 @@ public class RegisterServlet extends AbstractMblogSpringServlet{
         usersService = getBean(UsersService.class);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
 		String login = request.getParameter("login");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");

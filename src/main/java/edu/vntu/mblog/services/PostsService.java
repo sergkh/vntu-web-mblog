@@ -1,108 +1,29 @@
-/**
- *
- */
 package edu.vntu.mblog.services;
 
-import static edu.vntu.mblog.util.ValidationUtils.validateLen;
+import edu.vntu.mblog.dao.jdbc.PostsJdbcDao;
+import edu.vntu.mblog.dao.jdbc.UsersJdbcDao;
+import edu.vntu.mblog.domain.Post;
+import edu.vntu.mblog.errors.UserNotFoundException;
+import edu.vntu.mblog.errors.ValidationException;
 
 import java.util.List;
 
-import edu.vntu.mblog.dao.PostsDao;
-import edu.vntu.mblog.dao.UsersDao;
-import edu.vntu.mblog.domain.Post;
-import edu.vntu.mblog.domain.User;
-import edu.vntu.mblog.errors.UserNotFoundException;
-import edu.vntu.mblog.errors.ValidationException;
-import edu.vntu.mblog.jdbc.ConnectionManager;
-
 /**
  *
- * @author sergey
+ * User: sergey
+ * Date: 11/28/13, 10:19 PM
  */
-public class PostsService {
+public interface PostsService {
 
-    private PostsDao postsDao;
-    private UsersDao usersDao;
+    void createPost(String userLogin, String post) throws UserNotFoundException, ValidationException;
 
-    private ConnectionManager connectionManager;
+    List<Post> getUsersFeed(String userLoginOrEmail) throws UserNotFoundException;
 
-    public void createPost(String userLogin, String post) throws UserNotFoundException, ValidationException {
-        validateLen("post", post, 3, 512);
+    List<Post> getAllPosts(int offset, int limit) throws ValidationException;
 
-        try {
-            User u = usersDao.getByLoginOrEmail(userLogin);
+    void moderatePost(long id, Post.State state);
 
-            if(u == null) {
-                throw new UserNotFoundException(userLogin, "User not found");
-            }
+    void setPostsDao(PostsJdbcDao postsDao);
 
-            postsDao.create(u.getId(), post);
-            connectionManager.commitTransaction();
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public List<Post> getUsersFeed(String userLoginOrEmail) throws UserNotFoundException {
-        try {
-            User u = usersDao.getByLoginOrEmail(userLoginOrEmail);
-
-            if(u == null) {
-                throw new UserNotFoundException(userLoginOrEmail, "User not found");
-            }
-
-            List<Post> posts = postsDao.getFeed(u.getId(), 0, 1000); // TODO: extract offset and limit
-
-            connectionManager.commitTransaction();
-
-            return posts;
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-
-
-    public List<Post> getAllPosts(int offset, int limit) throws ValidationException {
-        if(offset < 0)
-            throw new ValidationException("offset", "Offset can't be negative");
-
-        if(limit < 0)
-            throw new ValidationException("limit", "Limit can't be negative");
-
-        try {
-            List<Post> posts = postsDao.getAll(offset, limit);
-            connectionManager.commitTransaction();
-            return posts;
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw e;
-        }
-    }
-
-    public void moderatePost(long id, Post.State state) {
-        try {
-            postsDao.moderate(id, state);
-            connectionManager.commitTransaction();
-        } catch (Exception e) {
-            connectionManager.rollbackTransaction();
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void setPostsDao(PostsDao postsDao) {
-        this.postsDao = postsDao;
-    }
-
-    public void setUsersDao(UsersDao usersDao) {
-        this.usersDao = usersDao;
-    }
-
-    public void setConnectionManager(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
-    }
+    void setUsersDao(UsersJdbcDao usersDao);
 }
-
-

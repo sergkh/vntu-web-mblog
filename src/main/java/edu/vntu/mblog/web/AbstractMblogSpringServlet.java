@@ -6,7 +6,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-public abstract class AbstractMblogSpringServlet extends HttpServlet{
+public abstract class AbstractMblogSpringServlet extends HttpServlet {
 
     private ApplicationContext context;
 
@@ -16,7 +16,7 @@ public abstract class AbstractMblogSpringServlet extends HttpServlet{
         context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     }
 
-    public <T> T getBean(Class<T> type){
+    public <T> T getBean(Class<T> type) {
         return context.getBean(type);
     }
 }

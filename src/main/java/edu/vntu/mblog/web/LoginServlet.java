@@ -1,15 +1,14 @@
 package edu.vntu.mblog.web;
 
+import edu.vntu.mblog.domain.User;
+import edu.vntu.mblog.errors.AuthenticationExeption;
+import edu.vntu.mblog.services.UsersService;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import edu.vntu.mblog.domain.User;
-import edu.vntu.mblog.errors.AuthenticationExeption;
-import edu.vntu.mblog.services.UsersService;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 

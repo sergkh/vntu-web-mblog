@@ -1,12 +1,14 @@
 *.class
 .idea
 *.iml
+*.ipr
+*.iws
 out
 .classpath
 .project
 .settings
 .metadata
-
+target/
 # Package Files #
 # *.jar
 *.war

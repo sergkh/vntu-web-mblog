@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import edu.vntu.mblog.domain.User;
 import edu.vntu.mblog.errors.UserNotFoundException;
 import edu.vntu.mblog.services.UsersService;
+import edu.vntu.mblog.services.impl.UsersServiceImpl;
 
 /**
  * Servlet implementation class SubscriptionsServlet

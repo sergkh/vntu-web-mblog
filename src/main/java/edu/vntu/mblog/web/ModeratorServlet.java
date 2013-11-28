@@ -1,16 +1,15 @@
 package edu.vntu.mblog.web;
 
-import java.io.IOException;
+import edu.vntu.mblog.domain.Post.State;
+import edu.vntu.mblog.errors.ValidationException;
+import edu.vntu.mblog.services.PostsService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import edu.vntu.mblog.domain.Post.State;
-import edu.vntu.mblog.errors.ValidationException;
-import edu.vntu.mblog.services.PostsService;
+import java.io.IOException;
 
 /**
  * 
