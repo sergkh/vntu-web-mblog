@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,13 +18,20 @@ import edu.vntu.mblog.services.UsersService;
  * 
  */
 @WebServlet("/users/*")
-public class UserPageServlet extends HttpServlet {
+public class UserPageServlet extends AbstractMblogSpringServlet {
 	private static final long serialVersionUID = 3203753443583716314L;
 	
-	private final PostsService postsService = PostsService.getInstance();
-	private final UsersService usersService = UsersService.getInstance();
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private PostsService postsService;
+	private UsersService usersService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        usersService = getBean(UsersService.class);
+        postsService = getBean(PostsService.class);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		getServletContext().log("Rendering users page");
 		
 		String login = request.getPathInfo().replace("/", "");

@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,12 +17,18 @@ import edu.vntu.mblog.services.UsersService;
  * Servlet implementation class SubscriptionsServlet
  */
 @WebServlet("/subscriptions/*")
-public class SubscriptionsServlet extends HttpServlet {
+public class SubscriptionsServlet extends AbstractMblogSpringServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private final UsersService usersService = UsersService.getInstance();
-	
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private UsersService usersService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        usersService = getBean(UsersService.class);
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String action = req.getParameter("action");
 		
 		switch(action) {

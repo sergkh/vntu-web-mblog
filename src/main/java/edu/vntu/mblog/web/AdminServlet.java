@@ -7,24 +7,28 @@ import edu.vntu.mblog.services.UsersService;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Servlet implementation class AdminServlet
  */
 @WebServlet("/admin")
-public class AdminServlet extends HttpServlet {
+public class AdminServlet extends AbstractMblogSpringServlet {
 	private static final long serialVersionUID = 1L;
     
 	private static final int USERS_LIMIT = 100;
 	
-	private final UsersService usersService = UsersService.getInstance();
+	private UsersService usersService;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        usersService = getBean(UsersService.class);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	getServletContext().log("Rendering admin page");
     	
 		try {
