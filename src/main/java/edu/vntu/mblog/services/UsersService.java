@@ -26,8 +26,6 @@ import edu.vntu.mblog.util.SecurityUtils;
  */
 public class UsersService {
 
-    private static final UsersService instance = new UsersService();
-
     private UsersDao usersDao;
     private UserSubscribersDao subscribersDao;
     private PostsDao postsDao;

@@ -20,12 +20,11 @@ import edu.vntu.mblog.jdbc.ConnectionManager;
  * @author sergey
  */
 public class PostsService {
-    private static final PostsService instance = new PostsService();
 
     private PostsDao postsDao;
     private UsersDao usersDao;
 
-    private final ConnectionManager cm = ConnectionManager.getInstance();
+    private ConnectionManager connectionManager;
 
     public void createPost(String userLogin, String post) throws UserNotFoundException, ValidationException {
         validateLen("post", post, 3, 512);
@@ -38,9 +37,9 @@ public class PostsService {
             }
 
             postsDao.create(u.getId(), post);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -55,11 +54,11 @@ public class PostsService {
 
             List<Post> posts = postsDao.getFeed(u.getId(), 0, 1000); // TODO: extract offset and limit
 
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
 
             return posts;
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -75,10 +74,10 @@ public class PostsService {
 
         try {
             List<Post> posts = postsDao.getAll(offset, limit);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
             return posts;
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw e;
         }
     }
@@ -86,9 +85,9 @@ public class PostsService {
     public void moderatePost(long id, Post.State state) {
         try {
             postsDao.moderate(id, state);
-            cm.commitTransaction();
+            connectionManager.commitTransaction();
         } catch (Exception e) {
-            cm.rollbackTransaction();
+            connectionManager.rollbackTransaction();
             throw new RuntimeException(e);
         }
     }
@@ -99,6 +98,10 @@ public class PostsService {
 
     public void setUsersDao(UsersDao usersDao) {
         this.usersDao = usersDao;
+    }
+
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 }
 
