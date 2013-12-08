@@ -31,6 +31,7 @@ public class UsersService {
     private final UsersDao usersDao = new UsersDao();
     private final UserSubscribersDao subscribersDao = new UserSubscribersDao();
     private final PostsDao postsDao = new PostsDao();
+    private final EmailService emailService = EmailService.getInstance();
 
     private final ConnectionManager cm = ConnectionManager.getInstance();
     private UsersService() {}
@@ -49,6 +50,7 @@ public class UsersService {
 
         User u = new User(login, email, passHash);
         u.setPermissions(EnumSet.of(User.Permission.USER));
+        emailService.sendRegisterEmail(u, password);
 
         try {
             usersDao.create(u);
