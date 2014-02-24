@@ -11,3 +11,4 @@ mblog
 
 Лекції з веб програмування можна знайти у гілці [lections](https://github.com/sergkh/vntu-web-mblog/blob/lections/README.md).
 
+Завдання на лабораторні можна знайти тут: [документі](http://goo.gl/ho3juV)
