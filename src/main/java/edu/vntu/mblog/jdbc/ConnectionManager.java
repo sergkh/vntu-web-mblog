@@ -42,7 +42,7 @@ public class ConnectionManager {
         } catch (NameNotFoundException nfe) {
             throw new RuntimeException("Can't obtain dataSource from context. " +
                     "Have you added data source to context.xml file? " +
-                    "Read javadoc on ConnectionManager.java file.");
+                    "Read javadoc on ConnectionManager.java file.", nfe);
         } catch (Exception e) {
             throw new RuntimeException("Can't obtain dataSource from context", e);
         }
