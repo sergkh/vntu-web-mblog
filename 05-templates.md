@@ -153,7 +153,37 @@ HTML-шаблони
 
 TODO: add posts-list
 
-Щоб покращити читабельність додатково можна дещо змінити формат виведення дати замінивши `${post.createdAt}` на `${#dates.format(post.createdAt, 'HH:mm dd.MM.yy')}`.
+Щоб покращити вигляд сторінки дещо змінимо формат виведення дати замінивши `${post.createdAt}` на `${#dates.format(post.createdAt, 'HH:mm dd.MM.yy')}`.
+
+Тепер можна також одразу додати можливість додавати пости, для чого в шаблон додамо простеньку форму:
+
+    <div class="row">
+        <form method="POST" action="/post">
+            <div class="form-group">
+                <label for="post-text">Що нового?</label>
+                <textarea class="form-control" rows="3" name="text" id="post-text"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Додати</button>
+        </form>
+    </div>
+
+Форма відсилатиме текст, який користував ввів у параметрі `text` методом `POST`на URL: `/post`. Тепер необхідно написати обробник форми у класі `IndexController`, який додаватиме новий пост до списку існуючих:
+
+    @RequestMapping(value = "/post", method = RequestMethod.POST)
+    public String createPost(@RequestParam("text") String postText) {
+        postsService.addPost(new Post("Unknown", postText, new Date()));
+        return "redirect:home";
+    }
+
+В анотації `@RequestMapping` зазначається що даний метод обробляє тільки `POST` запити на URL `/post`. В *Spring* дані форми передаються як аргументи функції помічені анотацією `@RequestParam`, яка й пов’язує ім’я параметра форми `text` зі змінною. При чому *Spring* сам вміє перетворювати типи — якби необхідно було обробити булевий чи числовий параметр, то все, що потребувалось би це тільки змінити тип змінної на `boolean` чи `int` (або ж `Boolean` чи `Integer` якщо допускається також значення `null`). Метод створює новий об’єкт `Post` на основі введених даних (отримання імені користувача буде реалізовано після реєстрації) з поточною датою й часом. Після чого на браузер користувача відправляється команда Redirect на URL `/home` для чого замість імені шаблону повертається `"redirect:home"`. Виглядатиме сайт після цього наступним чином:
+
+//TODO: add post-add.png
+
+Отримані вихідні коди можна знайти за посиланням: TODO: add git commit URL
+
+
+
+
 
 
 
