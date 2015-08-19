@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha256-sHwgyDk4CGNYom267UJX364ewnY4Bh55d53pxP5WDug= sha512-mkkeSf+MM3dyMWg3k9hcAttl7IVHe2BA1o/5xKLl4kBaP0bih7Mzz/DBy4y6cNZCHtE2tPgYBYH/KtEjOQYKxA==" crossorigin="anonymous" />
     <title>Заголовок сторінки</title>
   </head>
   <body>
-    <h2>Приклад 1</h2>
-    <p>Перший абзац</p>
-    <p>Другий абзац</p>
-    <p>Другий абзац</p>
+
+	<div class="container">
+		<div class="row">
+			<form method="POST" action="/post">
+				<div class="form-group">
+					<label for="post-text">Що нового?</label>
+					<textarea class="form-control" rows="3" name="text" id="post-text"></textarea>
+				</div>
+				<button type="submit" class="btn btn-success">Додати</button>
+			</form>
+		</div>
+	
+		<div class="row" th:each="post: ${posts}">
+			<hr/>
+	        <strong class="pull-left primary-font" th:text="${post.author}">Логін</strong>
+	        <small class="pull-right text-muted">
+	           <span class="glyphicon glyphicon-time"></span> 
+	           	<span th:text="${#dates.format(post.createdAt, 'HH:mm dd.MM.yy')}">19:05 14.05.14</span>
+            </small>
+	        <br/>
+	        <div class="text-justify" th:text="${post.text}">Текст повідомлення</div>
+	    </div>
+	</div>
   </body>
 </html>
+
