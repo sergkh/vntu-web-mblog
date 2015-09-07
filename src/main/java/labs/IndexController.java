@@ -1,9 +1,7 @@
 package labs;
 
-import java.util.Date;
-
-import labs.models.Post;
 import labs.services.PostsService;
+import labs.services.UsersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,15 +16,41 @@ public class IndexController {
 	@Autowired
 	private PostsService postsService;
 	
-	@RequestMapping("/home")
+	@Autowired
+	private UsersService usersService;
+	
+	@RequestMapping("/")
 	public String index(Model model) {
-		model.addAttribute("posts", postsService.getRecentPosts());
 		return "index";
+	}
+	
+	@RequestMapping("/home")
+	public String home(Model model) {
+		model.addAttribute("posts", postsService.getRecentPosts());
+		model.addAttribute("users", usersService.getSubscribeRecommendations());
+		return "home";
 	}
 	
 	@RequestMapping(value = "/post", method = RequestMethod.POST)
 	public String createPost(@RequestParam("text") String postText) {
-		postsService.addPost(new Post("Unknown", postText, new Date()));
+		postsService.addPost(postText);
 		return "redirect:home";
 	}
+	
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public String register(@RequestParam("login") String login, 
+			@RequestParam("email") String email, 
+			@RequestParam("pass") String pass) {
+		
+		usersService.register(login, email, pass);
+
+		return "redirect:home";
+	}
+	
+	@RequestMapping(value="/subscribe", method = RequestMethod.POST)
+	public String subscribe(@RequestParam("login") String login) {
+		usersService.subscribe(login);
+		return "redirect:home";
+	}
+	
 }

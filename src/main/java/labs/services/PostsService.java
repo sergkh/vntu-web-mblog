@@ -1,29 +1,37 @@
 package labs.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import labs.models.Post;
+import labs.models.User;
+import labs.repositories.PostRepository;
+import labs.repositories.UserRepository;
 
 @Service
 public class PostsService {
-	private static final List<Post> INITIAL_POSTS = Arrays.asList(
-		new Post("Admin", "First post", new Date()),
-		new Post("Tester", "Second post", new Date()),
-		new Post("Admin", "Third post", new Date())
-	); 
+
+	@Autowired
+	private UserRepository usersRepo;
 	
-	private List<Post> posts = new ArrayList<Post>(INITIAL_POSTS);
-	
+	@Autowired
+	private PostRepository postsRepo;
+
+	@Transactional
 	public List<Post> getRecentPosts() {
-		return posts;
+		User currentUser = usersRepo.findOne(1L);
+		
+		return postsRepo.findByAuthorInOrderByCreatedAtAsc(
+				currentUser.getSubscriptions());
 	}
 	
-	public void addPost(Post p) {
-		posts.add(p);
+	@Transactional
+	public void addPost(String text) {
+		User currentUser = usersRepo.findOne(1L);
+		postsRepo.save(new Post(currentUser, text, new Date()));
 	}
 }
