@@ -28,8 +28,16 @@
 	        <div class="text-justify" th:text="${post.text}">Текст повідомлення</div>
 	    </div>
 
+   	    <ul class="pagination" th:if="${pagesCount} > 1">
+		    <li th:each="page: ${#numbers.sequence(1, pagesCount)}" th:class="${page} == ${currentPage} ? 'active'">
+		      <a href="#" th:href="@{/home(page=${page})}">
+		        <span th:text="${page}"></span>
+		      </a>
+		    </li>
+		</ul>
+
 	    <hr/>
-	    
+	    	    
 	    <div class="row">
 	    	<ul class="list-inline">
 				<li class="text-center" th:each="user: ${users}">

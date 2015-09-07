@@ -25,9 +25,12 @@ public class IndexController {
 	}
 	
 	@RequestMapping("/home")
-	public String home(Model model) {
-		model.addAttribute("posts", postsService.getPosts());
+	public String home(Model model, 
+					   @RequestParam(value = "page", defaultValue = "1") int page) {
+		model.addAttribute("posts", postsService.getPosts(page));
 		model.addAttribute("users", usersService.getSubscribeRecommendations());
+		model.addAttribute("pagesCount", postsService.pagesCount());
+		model.addAttribute("currentPage", page);
 		return "home";
 	}
 	
