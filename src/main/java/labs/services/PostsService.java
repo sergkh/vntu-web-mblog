@@ -22,7 +22,7 @@ public class PostsService {
 	private PostRepository postsRepo;
 
 	@Transactional
-	public List<Post> getRecentPosts() {
+	public List<Post> getPosts() {
 		User currentUser = usersRepo.findOne(1L);
 		
 		return postsRepo.findByAuthorInOrderByCreatedAtAsc(

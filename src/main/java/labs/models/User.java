@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
@@ -38,7 +39,7 @@ public class User {
 	@OneToMany(mappedBy = "author")
 	private List<Post> posts = new ArrayList<>();
 	
-	@OneToMany
+	@ManyToMany
 	private Set<User> subscriptions = new HashSet<>();
 	
 	public User() {

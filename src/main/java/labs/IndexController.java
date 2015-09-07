@@ -26,7 +26,7 @@ public class IndexController {
 	
 	@RequestMapping("/home")
 	public String home(Model model) {
-		model.addAttribute("posts", postsService.getRecentPosts());
+		model.addAttribute("posts", postsService.getPosts());
 		model.addAttribute("users", usersService.getSubscribeRecommendations());
 		return "home";
 	}

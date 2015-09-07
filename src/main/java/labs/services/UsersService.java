@@ -1,6 +1,6 @@
 package labs.services;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,11 +43,12 @@ public class UsersService {
 		User currentUser = usersRepo.findOne(1L);
 
 		// перетворює список користувачів на список їх ідентифікаторів
-		List<Long> ignoreIds = currentUser.getSubscriptions()
-										  .stream()
-										  .map(u -> u.getId())
-										  .collect(Collectors.toList());
+		List<Long> ignoreIds = new ArrayList<>();
 
+		for(User u : currentUser.getSubscriptions()) {
+			ignoreIds.add(u.getId());
+		}
+		
 		return usersRepo.findFirst10ByIdNotIn(ignoreIds);
 	}
 	
