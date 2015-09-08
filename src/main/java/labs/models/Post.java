@@ -28,6 +28,7 @@ public class Post {
     @Size(min = 1, max = 2048)
     private String text;
     
+	@NotNull
     private Date createdAt;
     
 	public Post(User author, String text, Date createdAt) {
