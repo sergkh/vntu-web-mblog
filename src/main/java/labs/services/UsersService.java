@@ -29,7 +29,7 @@ public class UsersService {
 	public void register(String login, String email, String pass) {
 		String passHash = new BCryptPasswordEncoder().encode(pass);
 		
-		User u = new User(login, email, passHash);
+		User u = new User(login, email.toLowerCase(), passHash);
 
 		// підпишемо користувача на самого себе
 		u.getSubscriptions().add(u);
