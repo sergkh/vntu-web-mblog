@@ -56,7 +56,7 @@ public class User {
 }
 ```
 
-Сам клас помічається анотацією `@Entity`, яка вказує, що клас повинен зберігатись у БД. *Hibernate* автоматично підбере імена табличок і полів за їх назвами (в даному випадку табличка `User`), однак їх можна вказати явно за допомогою додаткових анотацій `@Table("назва таблички")` та `@Column(name="назва колонки")`. За допомогою анотації `@Column` також можна вказати, що значення колонки повинне бути унікальним, як зроблено для `login` та `email`, при цьому в СУБД буде автоматично створено унікальний індекс по цим колонкам і буде викинуто виключення при спробі додати ще одного користувача з існуючим логіном чи поштою.
+Сам клас помічається анотацією `@Entity`, яка вказує, що клас повинен зберігатись у БД. *Hibernate* автоматично підбере імена табличок і полів за їх назвами (в даному випадку табличка `user`), однак їх можна вказати явно за допомогою додаткових анотацій `@Table("назва таблички")` та `@Column(name="назва колонки")`. За допомогою анотації `@Column` також можна вказати, що значення колонки повинне бути унікальним, як зроблено для `login` та `email`, при цьому в СУБД буде автоматично створено унікальний індекс по цим колонкам і буде викинуто виключення при спробі додати ще одного користувача з існуючим логіном чи поштою.
 
 Клас моделі повинен обов’язково мати контруктор без параметрів та мати поле, яке буде первинним ключом в БД, це поле помічається як `@Id`, в прикладі це окреме поле `id`, яке додатково помічено анотацію `@GeneratedValue`, яка вказує *Hibernate*, що він має бути відповідальним за генерацію ідентифікаторів для нових записів. Тобто при додаванні нового запису ми не встановлюємо ідентифікатор запису — бібліотека сама встановить його.
 
@@ -90,19 +90,21 @@ public class Post {
 }
 ```
 
-Як видно для простих полів анотації дуже схожі. Тепер можна розглянути саму складну частину — відношення між об’єктами. *Hibernate* підтримує фактично всі види відношень: `@OneToOne`, `@OneToMany`, `@ManyToOne` та `@ManyToMany`. Розглянемо їх кожне детальніше:
+Як видно для простих полів анотації дуже схожі. Тепер можна розглянути саму складну частину — відношення між об’єктами. *Hibernate* підтримує всі види відношень: `@OneToOne`, `@OneToMany`, `@ManyToOne` та `@ManyToMany`. Розглянемо кожне з них детальніше:
 
 `@OneToOne`
 -----
 Описує відношення 1 до 1-го. Таке відношення не часто застосовується, однак іноді логічно поділити табличку на кілька з меншою кількістю колонок. Наприклад припустимо, що необхідно зберігати багато персональних даних користувача (адресу, телефон, місто, дата народження), однак ця інформація буде використовуватись досить рідко лише на одній зі сторінок налаштування профіля. Тоді логічно винести ці данні в окрему табличку й не дістававати їх кожен раз. В коді це буде виглядати приблизно так:
 
 ```java
+@Entity
 public class User {
     @OneToOne(mappedBy = "user")
-    private Details status;
+    private Details details;
     ...
 }
 
+@Entity
 public class Details {
     @OneToOne
     private User user;
@@ -110,12 +112,57 @@ public class Details {
 }
 ```
 
-Параметр `mappedBy = "user"` в анотації користувача вказує, що для того щоб знайти відповідний об’єкт `Details` необхідно звернутись до таблички `details` де знайти поле `user`. Тобто фактично в БД це виглядатиме так: табличка `details` міститиме поле `user_id` (*Hibernate* автоматично додасть id до імені), по якому можна буде знайти відповідну стрічку з деталями користувача.
+Параметр `mappedBy = "user"` в анотації користувача вказує, що для того щоб знайти відповідний об’єкт `Details` необхідно звернутись до таблички `details` де знайти поле `user`. Тобто фактично в БД це виглядатиме так: табличка `details` міститиме поле `user_id` (*Hibernate* автоматично додасть id до імені), по якому можна буде знайти відповідну стрічку з деталями користувача.Якщо ж перемістити `mappedBy` в клас `Details` й вказати `@OneToOne(mappedBy = "details")`, тоді навпаки в табличку користувача буде додано поле `details_id`.
 
 `@OneToMany` та `@ManyToOne`
 -----
 
+Це взаємодоповнюючі анотації, які описують відношення один до багатьох й зворотнє багато до одного. Прикладом такого відношення можуть бути пости чи коментарі користувача: один користувач може мати багато постів/коментарів (OneToMany), а пост чи коментар може мати лише одного автора (ManyToOne). В коді це буде виглядати так само як і у попередньому випадку, однак тепер параметр `mappedBy` може бути лише на стороні користувача, так кожен пост буде мати параметр в БД `author_id`, який вказуватиме на автора. Зворотній ж варіант неможливий, оскільки користувач має багато постів.
 
+```java
+@Entity 
+public class User {
+    @OneToMany(mappedBy = "author")
+    private List<Post> posts = new ArrayList<>();
+    ...
+}
+
+@Entity 
+public class Post {
+    @ManyToOne
+    private User author;
+    ...
+}
+```
+
+Зазвичай для набору постів використовують тип список — `List`, або ж набір — `Set`. Різниця між ними така, що `Set` допоможе уникнути дуплікатів, тобто якщо записати пост в `Set` кілька разів, збережеться тільки одне з відношень.
+
+`@ManyToMany`
+------
+Прикладом відношення багато до багатьох можуть бути групи користувачів: користувач може належати до більш ніж однієї групи й група може мати багато користувачів. Відношення багато до багатьох може бути описане тільки за допомогою додаткової таблички, яка буде містити ідентифікатори обох сторін відношення. Hibernate сам створить таку табличку з назвою `user_groups` або `group_users` в залежності від параметру `mappedBy`. Для того, щоб вказати назву таблички вручну існує анотація `@JoinTable`, однак тут вона розглядатись не буде. Приклад коду:
+
+```java
+@Entity 
+public class User {
+    @OneToMany()
+    private Set<Group> groups = new HashSet<>();
+    ...
+}
+
+@Entity 
+public class Group {
+    @ManyToMany(mappedBy = "groups")
+    private Set<User> users = new HashSet<>();
+    ...
+}
+```
+
+В даному випадку створиться табличка `user_groups` з двома колонками `users_id`, `groups_id`.
+
+З’єднання з СУБД
+-----
+
+При створенні проекту ми вказували, що проект буде працювати з СУБД, тому IDE автоматично скачала вбудовану базу даних та авто
 
 
 JDBC (англ. Java DataBase Connectivity — з'єднання з базами даних на Java) це стандартний програмний інтерфейс для роботи з СУБД на Java. В JDBC описані основні класи та Java інтерфейси, що описують методи встановлення з’єднання до бази даних, отримання вибірок, оновлення бази та інші. Дані інтерфейси описані в пакеті `java.sql`.
@@ -157,70 +204,6 @@ JDBC (англ. Java DataBase Connectivity — з'єднання з базами
 
 `"jdbc:mysql://192.168.1.56/univ"` - СУБД MySql, що знаходиться за адресою 192.168.1.56, назва бази даних `univ`.
 
-Приклад використання з’єднання у об’єктах доступу до бази (DAO):
-
-    public class StudentsDao {
-    
-      public List<Student> getAll() {
-         Connection con = ConnectionManager.getConnection();
-         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM students");
-    
-            List<Student> students = new ArrayList<Student>();
-    
-            while(rs.next()) {
-    
-               long id  = rs.getLong("id");
-               String name = rs.getString("name");
-               String email = rs.getString("email");
-    
-               students.add(new Student(id, name, email));
-            }
-    
-            rs.close();
-            stmt.close();
-    
-            return students;
-         } catch(Exception ex) {
-            throw new RuntimeException(ex);
-         } finally {
-            con.close();
-         }
-      }
-    
-      public void create(Student student) {
-          String sql = "INSERT INTO students (name, email, group_id, mark) VALUES (?,?,?,?)";
-    
-          try (Connection con = ConnectionManager.getConnection();
-               PreparedStatement createSt = con.prepareStatement(sql)) {
-    
-              createSt.setString(1, student.getName());
-              createSt.setString(2, student.getEmail());
-              createSt.setInt(3, student.getGroupId());
-              createSt.setInt(4, student.getMark());
-              createSt.executeUpdate();
-    
-              try(PreparedStatement getIdSt = con.prepareStatement("CALL IDENTITY()")) {
-                  ResultSet rs = getIdSt.executeQuery();
-                  
-                  if(rs.next()) { 
-                    student.setId(rs.getLong(1));
-                  }
-              }
-    
-          } catch (SQLException e) {
-              throw new RuntimeException(e);
-          }
-      }
-    
-    }
-
-Пул з’єднань
------------
-
-TODO
-
 Робота з транзакціями
 --------------
 
@@ -247,59 +230,4 @@ TODO
 Можливо створення групи без користувача не призведе до серйозних помилок у лозіці додатку, але бувають більш складні випадки, наприклад, з додаванням студента необхідно збільшити лічильники кількості студентів у групи чи факультету - збільшити лічильники й недодати студента може призвести до значно критичніших наслідків.
 
 Зазвичай принято, що такі дії, які є логічним цілим але складаються з декількох запитів заключаються в один метод класу сервісів. Й логічним при цьому є зробити щоб області видимості методу та транзації співпали - тобто відкривати з’єднання з транзакцією на початку методу сервісу та закривати в кінці. При цьому керування з’єднаннями потрібно винести з DAO об’єктів й передавати його ззовні.
-
-Зберігати об’єкт з’єднання в DAO об’єкті не можна, оскільки паралельно в інших потоках можуть паралельно виконуватись ще запити, які не повинні доступатись до даного з’єднання. Тому необхідно обмежити область видимості DAO об’єкту методом сервісу або ж передавати з’єдання необхідно в кожен метод:
-
-    public void create(Connection con, Student student);
-
-Одним з варіантів щоб не засмічувати методи об’єктів DAO ще додатковим з’єднанням, можна скористатись наступним підходом: на початку методу сервісу створити з’єднання та прив’язати його до поточного потоку, для чого можна скористатись класом `ThreadLocal`. Далі з нього можна отримати з’єднання, яке буде унікальним саме для даного потоку:
-
-    public class ConnectionManager {
-      private static final ConnectionManager instance = new ConnectionManager(); 
-      private final DataSource dataSource = ... ;
-      
-      private final ThreadLocal<Connection> threadLocalConnections = new ThreadLocal<Connection>(){
-        @Override
-        protected Connection initialValue() {
-              try {
-                    Connection c = dataSource.getConnection();
-                    c.setAutoCommit(false);
-                  return c;
-              } catch (Exception e) {
-                  throw new RuntimeException(e);
-              }
-        }
-      };
-      
-      public static ConnectionManager getInstance() {
-        return instance;
-      }
-      
-      public Connection currentConnection() {
-        return threadLocalConnections.get();
-      }
-        
-      public void commitTransaction() {
-        try {
-          Connection c = currentConnection();
-          c.commit();
-          c.close();
-          threadLocalConnections.remove();
-        } catch (Exception e){
-          throw new RuntimeException(e);
-        }
-      }
-    
-      public void rollbackTransaction() {
-        try {
-          Connection c = currentConnection(); 
-          c.rollback();
-          c.close();
-          threadLocalConnections.remove();
-        } catch (Exception e){
-          throw new RuntimeException(e);
-        }
-      }
-    }
-
 
