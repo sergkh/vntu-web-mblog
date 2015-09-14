@@ -167,7 +167,6 @@ HTML-шаблони
 Для правильного відображення сайту, необхідно підключити СSS-бібліотеку — *Bootstrap*. Результат роботи буде таким:
 
 ![Результат роботи програми](https://github.com/sergkh/vntu-web-mblog/raw/lections/img/posts-list.png)
-TODO: add posts-list
 
 Щоб покращити вигляд сторінки дещо змінимо формат виведення дати замінивши `${post.createdAt}` на `${#dates.format(post.createdAt, 'HH:mm dd.MM.yy')}`.
 
@@ -199,7 +198,7 @@ TODO: add posts-list
 
 ![Результат роботи програми](https://github.com/sergkh/vntu-web-mblog/raw/lections/img/post-add.png)
 
-Отримані вихідні коди можна знайти за посиланням: TODO: add git commit URL
+Отримані вихідні коди можна знайти за [посиланням](https://github.com/sergkh/vntu-web-mblog/tree/87b913ccb0c5f09e93790abad0f9522773f857ec).
 
 Розглянемо деякі інші можливості які надає *Thymeleaf*:
 
@@ -240,7 +239,7 @@ TODO: add posts-list
     </tr>
 ```
 
-Зображення:
+URL зображення:
 
 ```html
     <img th:src="@{author.avatarUrl}" scr="/placeholder.png" />
@@ -252,6 +251,6 @@ TODO: add posts-list
     <input type="text" name="userName" value="John" th:value="${user.name}" />
 ```
 
-Даний щаблонізатор має ще багато можливостей про які можна почитати в [офіційній документації](http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html).
+Даний шаблонізатор має ще багато можливостей про які можна почитати в [офіційній документації](http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html).
 
 
