@@ -1,9 +1,11 @@
 package labs;
 
+import labs.models.Post;
 import labs.services.PostsService;
 import labs.services.UsersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +29,11 @@ public class IndexController {
 	@RequestMapping("/home")
 	public String home(Model model, 
 					   @RequestParam(value = "page", defaultValue = "1") int page) {
-		model.addAttribute("posts", postsService.getPosts(page));
+		
+		Page<Post> postsPage = postsService.getPosts(page, 5); // 5 постів на сторінку
+		model.addAttribute("posts", postsPage.getContent());
 		model.addAttribute("users", usersService.getSubscribeRecommendations());
-		model.addAttribute("pagesCount", postsService.pagesCount());
+		model.addAttribute("pagesCount", postsPage.getTotalPages());
 		model.addAttribute("currentPage", page);
 		return "home";
 	}
