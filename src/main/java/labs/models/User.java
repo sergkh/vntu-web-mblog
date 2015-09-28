@@ -29,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 })
 public class User implements UserDetails {
 	private static final long serialVersionUID = -532710433531902917L;
-
+	
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -103,6 +103,8 @@ public class User implements UserDetails {
 	public void setSubscriptions(Set<User> subscriptions) {
 		this.subscriptions = subscriptions;
 	}
+	
+}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

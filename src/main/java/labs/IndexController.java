@@ -56,8 +56,8 @@ public class IndexController {
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@RequestParam("login") String login, 
-						   @RequestParam("email") String email, 
-						   @RequestParam("pass") String pass, HttpServletRequest request) {
+			@RequestParam("email") String email, 
+			@RequestParam("pass") String pass) {
 		
 		usersService.register(login, email, pass);
 
@@ -68,6 +68,7 @@ public class IndexController {
 	public String loginForm() {
 		return "login";
 	}
+	
 	
 	@RequestMapping(value="/subscribe", method = RequestMethod.POST)
 	public String subscribe(@RequestParam("login") String login) {
