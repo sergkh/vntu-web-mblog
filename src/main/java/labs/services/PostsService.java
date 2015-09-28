@@ -23,7 +23,7 @@ public class PostsService {
 
 	@Transactional
 	public Page<Post> getPosts(int page, int pageSize) {
-		User currentUser = usersRepo.findOne(1L);
+		User currentUser = usersRepo.findOne(User.getCurrentUserId());
 		
 		return postsRepo.findByAuthorInOrderByCreatedAtDesc(
 				currentUser.getSubscriptions(),
@@ -33,7 +33,7 @@ public class PostsService {
 
 	@Transactional
 	public void addPost(String text) {
-		User currentUser = usersRepo.findOne(1L);
+		User currentUser = usersRepo.findOne(User.getCurrentUserId());
 		postsRepo.save(new Post(currentUser, text, new Date()));
 	}
 }

@@ -21,7 +21,7 @@ public class UsersService {
 	
 	@PostConstruct
 	@Transactional
-	public void createAdminUser() {
+	public void createAdminUser() {		
 		register("admin", "admin@mail.com", "qwerty");
 	}
 	
@@ -39,7 +39,7 @@ public class UsersService {
 	
 	@Transactional
 	public List<User> getSubscribeRecommendations() {
-		User currentUser = usersRepo.findOne(1L);
+		User currentUser = usersRepo.findOne(User.getCurrentUserId());
 
 		// перетворює список користувачів на список їх ідентифікаторів
 		List<Long> ignoreIds = new ArrayList<>();
@@ -56,7 +56,7 @@ public class UsersService {
 		User u = usersRepo.findByLogin(login);
 
 		// буде замінено після реалізації логіну
-		User currentUser = usersRepo.findOne(1L);
+		User currentUser = usersRepo.findOne(User.getCurrentUserId());
 		
 		if(currentUser.getId() != u.getId()) {		
 			currentUser.getSubscriptions().add(u);

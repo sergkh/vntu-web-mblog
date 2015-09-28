@@ -1,6 +1,7 @@
 package labs;
 
 import labs.models.Post;
+import labs.models.User;
 import labs.services.PostsService;
 import labs.services.UsersService;
 
@@ -23,6 +24,12 @@ public class IndexController {
 	
 	@RequestMapping("/")
 	public String index(Model model) {
+		
+		// якщо користувач вже увійшов, то перекинути його з реєстрації на домашню сторінку		
+		if(!User.isAnonymous()) {
+			return "redirect:/home";
+		}
+		
 		return "index";
 	}
 	
@@ -46,12 +53,17 @@ public class IndexController {
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@RequestParam("login") String login, 
-			@RequestParam("email") String email, 
-			@RequestParam("pass") String pass) {
+						   @RequestParam("email") String email, 
+						   @RequestParam("pass") String pass) {
 		
 		usersService.register(login, email, pass);
 
 		return "redirect:home";
+	}
+	
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String loginForm() {
+		return "login";
 	}
 	
 	@RequestMapping(value="/subscribe", method = RequestMethod.POST)

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha256-sHwgyDk4CGNYom267UJX364ewnY4Bh55d53pxP5WDug= sha512-mkkeSf+MM3dyMWg3k9hcAttl7IVHe2BA1o/5xKLl4kBaP0bih7Mzz/DBy4y6cNZCHtE2tPgYBYH/KtEjOQYKxA==" crossorigin="anonymous" />
+    <title>Вхід</title>
+  </head>
+  <body>
+
+	<div class="container">
+		<div class="row">
+		
+			<div class="col-xs-4 col-xs-offset-4">	
+			
+				<form method="POST" action="/login" style="margin-top: 25px;">
+					<div class="alert alert-danger" th:if="${param.error}" >
+						<span class="glyphicon glyphicon-exclamation-sign"></span> Невірний користувач чи пароль
+					</div>
+		        	
+		        	<div class="alert alert-info" th:if="${param.logout}">
+		        		<span class="glyphicon glyphicon-log-out"></span> Ви вийшли з системи
+	        		</div>
+
+					<div class="form-group">
+						<label for="reg-login">Логін</label>
+						<input class="form-control" type="text" name="login" id="reg-login"></input>
+					</div>
+					<div class="form-group">
+						<label for="post-text">Пароль</label>
+						<input class="form-control" type="password" name="password" id="post-text"></input>
+					</div>
+					
+					<button type="submit" class="btn btn-success">Увійти</button>
+					<a href="/" class="pull-right btn btn-link">Реєстрація</a>
+				</form>
+			</div>
+		</div>	
+	</div>
+  </body>
+</html>
+
