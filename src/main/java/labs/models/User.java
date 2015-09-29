@@ -103,8 +103,6 @@ public class User implements UserDetails {
 	public void setSubscriptions(Set<User> subscriptions) {
 		this.subscriptions = subscriptions;
 	}
-	
-}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
