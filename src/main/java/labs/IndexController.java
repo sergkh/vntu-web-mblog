@@ -1,5 +1,7 @@
 package labs;
 
+import javax.servlet.http.HttpServletRequest;
+
 import labs.models.Post;
 import labs.models.User;
 import labs.services.PostsService;
@@ -42,6 +44,7 @@ public class IndexController {
 		model.addAttribute("users", usersService.getSubscribeRecommendations());
 		model.addAttribute("pagesCount", postsPage.getTotalPages());
 		model.addAttribute("currentPage", page);
+		model.addAttribute("currentUser", User.getCurrentUser());
 		return "home";
 	}
 	
@@ -54,11 +57,11 @@ public class IndexController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@RequestParam("login") String login, 
 						   @RequestParam("email") String email, 
-						   @RequestParam("pass") String pass) {
+						   @RequestParam("pass") String pass, HttpServletRequest request) {
 		
 		usersService.register(login, email, pass);
 
-		return "redirect:home";
+		return "redirect:/home";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)

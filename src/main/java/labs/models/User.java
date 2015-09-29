@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 public class User implements UserDetails {
+	private static final long serialVersionUID = -532710433531902917L;
 
 	@Id
 	@GeneratedValue
@@ -134,6 +135,10 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+	
+	public static User getCurrentUser() {
+		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 	
 	public static Long getCurrentUserId() {

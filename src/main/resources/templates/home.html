@@ -12,7 +12,7 @@
 				<div class="form-group">
 					<label for="post-text">Що нового?</label>
 					<div class="pull-right">
-						Доброго дня, <span sec:authentication="name">Bob</span>
+						Доброго дня, <span th:text="${currentUser.login}">Bob</span>
 							<a class="btn btn-link btn-sm" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Вийти</a>
 					</div>
 					<textarea class="form-control" rows="3" name="text" id="post-text"></textarea>

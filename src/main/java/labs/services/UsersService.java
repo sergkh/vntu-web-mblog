@@ -25,7 +25,7 @@ public class UsersService {
 		register("admin", "admin@mail.com", "qwerty");
 	}
 	
-	@Transactional
+	@Transactional(readOnly = false)
 	public void register(String login, String email, String pass) {
 		String passHash = new BCryptPasswordEncoder().encode(pass);
 		
