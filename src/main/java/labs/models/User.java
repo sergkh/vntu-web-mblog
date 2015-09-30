@@ -10,8 +10,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -21,6 +23,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
+@Table(indexes = {
+  @Index(columnList="login", unique = true), 
+  @Index(columnList="email", unique = true)
+})
 public class User implements UserDetails {
 	private static final long serialVersionUID = -532710433531902917L;
 
@@ -29,17 +35,17 @@ public class User implements UserDetails {
 	private Long id;
 	
 	@NotBlank
-    @Size(min = 1, max = 512)
-    @Column(unique = true)
+	@Size(min = 1, max = 512)
+	@Column(unique = true)
 	private String login;
 	
 	@NotBlank
-    @Size(min = 1, max = 512)
-    @Column(unique = true)
+	@Size(min = 1, max = 512)
+	@Column(unique = true)
 	private String email;
 	
 	@NotBlank
-    @Size(min = 1, max = 100)
+	@Size(min = 1, max = 100)
 	private String password;
 	
 	@OneToMany(mappedBy = "author")
