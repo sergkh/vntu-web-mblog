@@ -254,32 +254,230 @@ public interface PostRepository extends CrudRepository<Post, Long> {
 
 Власне це й усе, що необхідно було зробити — реалізацію цього інтерфейсу буде автоматично згенеровано фреймворком *Spring*. Яким ж чином фреймворк знає, яким чином працює метод? Це вказано в назві методу та його аргументах, якщо метод називається `findByName` це означає що необхідно знайти об’єкт чи список об’єктів за значенням атрибуту `name`, метод має мати перший аргумент, який вказуватиме ім’я й повинен мати такий самий тип як і `name` у об’єкта.
 
+Зазвичай класи репозиторії відображають тільки роботу з СУБД — в більшості випадків один метод репозиторію це один SQL запит, а поєднуються декілька запитів в одну дію в сервісах, де використовуючи різні репозиторії та різні їх методи формується логіка роботи додатку. 
 
+Для того щоб отримати доступ до згенерованого репозиторію `UserRepository` необхідно в сервісі створити змінну з відповідним типом й поставити анотацію `@Autowired`. Самі ж класи сервісів необхідно помітити анотацією `@Service`, тоді їх аналогічним чином можна буде вставляти в контролери. Сервіс користувачів з реалізацією реєстрації, отримання списку рекомендованих користувачів та підписки на них матиме вигляд:
+
+```java
+package labs.services;
+
+import java.util.*;
+import javax.annotation.PostConstruct;
+import labs.models.User;
+import labs.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class UsersService {
+  
+  @Autowired
+  private UserRepository usersRepo;
+  
+  public void register(String login, String email, String pass) {
+    String passHash = new BCryptPasswordEncoder().encode(pass);
+    User u = new User(login, email.toLowerCase(), passHash);
+    u.getSubscriptions().add(u); // підпишемо користувача на самого себе
+    usersRepo.save(u);
+  }
+
+  public void subscribe(String login) {
+    User currentUser = usersRepo.findOne(1L);
+    User u = usersRepo.findByLogin(login);
+    currentUser.getSubscriptions().add(u);
+  }
+
+  public List<User> getSubscribeRecommendations() {
+    User currentUser = usersRepo.findOne(1L);
+    // перетворює список користувачів на список їх ідентифікаторів
+    List<Long> ignoreIds = new ArrayList<>();
+    for(User u : currentUser.getSubscriptions()) {
+      ignoreIds.add(u.getId());
+    }
+    return usersRepo.findFirst10ByIdNotIn(ignoreIds);
+  }  
+}
+```
+
+При реєстрації користувача перед збереженням паролю користувача гарним тоном є перетворення його односторонньою функцією хешування й зберігання хешу замість паролю — при логіні можна перевіряти хеші введеного та паролю з бази, а це значно підвищить безпеку вашого додатку. Якщо хтось отримає несанкціонований доступ до бази даних й скопіює паролі паролі користувачів їх не можливо буде використати для логіну в реальній системі. Крім того багато користувачів мають однакові паролі для різних сайтів, тому зберігання паролю у відкритому вигляді також наражає на небезпеку й сторонні сайти.
+
+Поки система авторизації не реалізована й ми не знаємо під яким користувачем зараз виконується запит в якості поточного користувача можна взяти першого зареєстрованого користувача, у нього буде `id = 1`. А для того щоб впевнитись що такий користувач точно буде можна створити його при старті сервісу. Це не можна зробити в конструкторі, оскільки *Spring* спочатку створює об’єкт `UsersService`, а тільки потім ініціює всі `@Autowired` змінні, але існує спеціальна анотація для методу, яка вказує, що його необхідно викликати, коли ініціалізація завершиться, створимо в ній нового користувача:
+
+```java
+public class UsersService {
+  ... 
+  @PostConstruct
+  public void createAdminUser() {
+    register("admin", "admin@mail.com", "qwerty");
+  }
+  ...
+}
+```
+
+Сервіс постів також буде тимчасово опиратись на першого створеного користувача:
+
+```java
+package labs.services;
+
+import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import labs.models.*;
+import labs.repositories.*;
+
+@Service
+public class PostsService {
+  @Autowired
+  private UserRepository usersRepo;
+  @Autowired
+  private PostRepository postsRepo;
+
+  public Page<Post> getPosts(int page, int pageSize) {
+    User currentUser = usersRepo.findOne(1L);
+    return postsRepo.findByAuthorInOrderByCreatedAtDesc(
+        currentUser.getSubscriptions(),
+        new PageRequest(page-1, pageSize) // spring рахує сторінки з нуля
+    );
+  }
+
+  public void addPost(String text) {
+    User currentUser = usersRepo.findOne(1L);
+    postsRepo.save(new Post(currentUser, text, new Date()));
+  }
+}
+```
+
+Для того щоб використати сервіси в контроллері їх також можна додати з анотацією `@Autowired`. Додатково це дозволяє мати лише один об’єкт сервісів навіть якщо вони вставляються в декілька контролерів.
+
+```java
+@Controller
+public class IndexController {
+  
+  @Autowired
+  private PostsService postsService;
+  
+  @Autowired
+  private UsersService usersService;
+  
+  @RequestMapping("/")
+  public String index(Model model) { return "index"; }
+  
+  @RequestMapping("/home")
+  public String home(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+    Page<Post> postsPage = postsService.getPosts(page, 5);
+    model.addAttribute("posts", postsPage.getContent());
+    model.addAttribute("users", usersService.getSubscribeRecommendations());
+    model.addAttribute("pagesCount", postsPage.getTotalPages());
+    model.addAttribute("currentPage", page);
+    return "home";
+  }
+  
+  @RequestMapping(value = "/post", method = RequestMethod.POST)
+  public String createPost(@RequestParam("text") String postText) {
+    postsService.addPost(postText);
+    return "redirect:home";
+  }
+  
+  @RequestMapping(value = "/register", method = RequestMethod.POST)
+  public String register(@RequestParam("login") String login, 
+      @RequestParam("email") String email, 
+      @RequestParam("pass") String pass) { 
+    usersService.register(login, email, pass);
+    return "redirect:home";
+  }
+  
+  @RequestMapping(value="/subscribe", method = RequestMethod.POST)
+  public String subscribe(@RequestParam("login") String login) {
+    usersService.subscribe(login);
+    return "redirect:home";
+  }
+  
+}
+```
+
+Для відображення сторінок можна скористатись кодом:
+
+```html
+        <ul class="pagination" th:if="${pagesCount} > 1">
+        <li th:each="page: ${#numbers.sequence(1, pagesCount)}" th:class="${page} == ${currentPage} ? 'active'">
+          <a href="#" th:href="@{/home(page=${page})}">
+            <span th:text="${page}"></span>
+          </a>
+        </li>
+    </ul>
+```
+
+Тут створюється звичайний для *Java* цикл `for` від 1 до `pagesCount` й змінюється клас сторінки на `active`, якщо вона зараз є активною. Список користувачів, на яких можна підписатись матиме вигляд:
+
+```html
+      <div class="row">
+        <ul class="list-inline">
+        <li class="text-center" th:each="user: ${users}">
+          <span th:text="${user.login}">Користувач</span><br/>
+          <form action="/subscribe" method="POST">
+            <input type="hidden" name="login" th:value="${user.login}"/>
+              <button class="btn btn-info btn-sm">Підписатись</button>
+            </form>
+        </li>
+      </ul>
+      </div>
+```
 
 Робота з транзакціями
 --------------
 
-Для того, щоб розпочати працювати з транзакціями в JDBC, необхідно просто встановити для з’єднання:
+Для того, щоб об’єднати певний набір дій у транзакцію, необхідно лише скористатись анотацією `@Transactional`. Дана анотація ставиться перед визначенням методу, зазвичай це метод сервісу, рідше контроллера. 
 
-    connection.setAutoCommit(false);
+В наведеному вище коді кожен з методів обох сервісів має виконуватись в транзакції. Наприклад для користувачів:
 
-що означає - не виконувати одразу кожен SQL вираз (Statement), а виконати тільки при послідуючому виклику методу
+```java
+@Service
+public class UsersService {
+  
+  @Autowired
+  private UserRepository usersRepo;
 
-    connection.commit();
+  @Transactional  
+  @PostConstruct
+  public void createAdminUser() { ... }
 
-або відмінити зміни:
+  @Transactional
+  public void register(String login, String email, String pass) { ... }
+  
+  @Transactional
+  public void subscribe(String login) { ... }
 
-    c.rollback();
+  @Transactional
+  public List<User> getSubscribeRecommendations() { ... }  
+}
+```
 
-Однак часто логіка додатку, яка повинна виконуватись в одній транзакції розміщується у декількох методах об’єкту DAO, або навіть у декількох об’єктах DAO. Наприклад, для того, щоб додати студента в табличку студентів, необхідно виконати наступні дії:
+Можливо також вказати, що транзакція буде тільки читати дані, а не буде нічого записувати в БД за допомогою параметру `@Transactional(readOnly=true)`, це дозволить *Spring* дещо зменшити час на створення транзакції. 
 
-1. Перевірити чи в таблиці груп існує група, вказана у студента.
-2. Якщо немає - створити таку групу та отримати її ідентифікатор.
-3. Додати студента у таблицю студентів.
+При цьому варто зазначити, що транзакції реалізуються наступним чином: насправді в контролер через `@Autowired` вставляється не сам сервіс `UsersService`, а згенерований проксі клас, який відкриває транзакцію перед викликом кожного методу сервісу й закриває після його виконання. Якщо в методі виникає виключення (Exception), то транзакція автоматично відкатується.
 
-В даному випадку створення групи, якщо студент не може бути доданий (наприклад пошта вже зареєстрована) немає змісту - тому необхідно щоб усі зазначені дії виконувались у одній транзакції. При цьому за створення й отримання груп може відповідати клас GroupsDao, а за роботу зі студентами StudentsDao. 
+![Робота проксі класу](https://raw.githubusercontent.com/sergkh/vntu-web-mblog/lections/img/tx-proxy.png)
 
-Можливо створення групи без користувача не призведе до серйозних помилок у лозіці додатку, але бувають більш складні випадки, наприклад, з додаванням студента необхідно збільшити лічильники кількості студентів у групи чи факультету - збільшити лічильники й недодати студента може призвести до значно критичніших наслідків.
+Очевидно при такому підході транзакції будуть створюватись тільки при виклику методів сервісу з контроллера, а при виклику власних методів в сервісі транзакція створюватись не буде, саме тому метод `createAdminUser()` теж має анотацію `@Transactional` навіть якщо `register` теж позначено як транзакційний.
 
-Зазвичай принято, що такі дії, які є логічним цілим але складаються з декількох запитів заключаються в один метод класу сервісів. Й логічним при цьому є зробити щоб області видимості методу та транзації співпали - тобто відкривати з’єднання з транзакцією на початку методу сервісу та закривати в кінці. При цьому керування з’єднаннями потрібно винести з DAO об’єктів й передавати його ззовні.
+Індекси
+-----------
+
+Для того, щоб стоврити індекси на певних колонках таблиць необхідно вказати назви цих колонок в анотації `@Table` перед назвою класу. Наприклад, в нашому випадку користувачі досить часто будуть доставатись по логіну (при вході на сайт), тому для нього варто створити індекс. Поле `email` не буде так часто використовуватись, але воно як і `login` має бути унікальним, тому для кожного з них необхідно створити по унікальному індексу, які задаються наступним чином:
+
+```java
+@Entity
+@Table(indexes = {
+  @Index(columnList="login", unique = true), 
+  @Index(columnList="email", unique = true)
+})
+public class User implements UserDetails { ... }
+```
+
+Робочий код для даного етапу розробки можна знайти за [посиланням](https://github.com/sergkh/vntu-web-mblog/tree/1b0d04aaca04a13c88f84c824e3ccf5f66c3b055).
 
