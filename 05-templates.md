@@ -289,7 +289,7 @@ public void home(@RequestHeader("User-Agent") String userAgent, Model model) {
 Можна також опціонально приховувати цілі блоки *HTML* сторінки в залежності від виконання умови. Наприклад на створеному сайті варто додати текст у випадку, якщо жодного посту ще не було створено:
 
 ```html
-    <div th:if="${posts.isEmpty()}">Постів немає</div>
+<div th:if="${posts.isEmpty()}">Постів немає</div>
 ```
 
 Також окрім тексту програмно можна змінювати й атрибути тегів. Розглянемо тільки основні з них:
@@ -297,22 +297,30 @@ public void home(@RequestHeader("User-Agent") String userAgent, Model model) {
 Атрибут `class`:
 
 ```html
-    <tr th:class="${row.even}? 'even' : 'odd'">
-      ...
-    </tr>
+<tr th:class="${row.even}? 'even' : 'odd'">
+  ...
+</tr>
 ```
 
 URL зображення:
 
 ```html
-    <img th:src="@{author.avatarUrl}" scr="/placeholder.png" />
+<img th:src="@{author.avatarUrl}" scr="/placeholder.png" />
 ```
 
 Значення полів введення форми:
 
 ```html
-    <input type="text" name="userName" value="John" th:value="${user.name}" />
+<input type="text" name="userName" value="John" th:value="${user.name}" />
 ```
+
+Можна також отримувати дані з параметрів сторінки (якщо це GET параметри), наприклад якщо URL сторінки виглядає: `page.html?query=Test` отримати параметр `query` можна так:
+
+```html
+<p th:text="${param.query[0]}" th:unless="${param.query == null}">Placeholder</p>
+```
+
+Параметр завжди буде представлений як `String[]`, навіть якщо значення тільки одне. Другий атрибут `th:unless` ховає елемент якщо параметра `query` в URL немає.
 
 Даний шаблонізатор має ще багато можливостей про які можна почитати в [офіційній документації](http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html).
 
