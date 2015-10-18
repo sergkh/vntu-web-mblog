@@ -1,8 +1,9 @@
 package labs;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import labs.models.Post;
+import labs.models.RegistrationForm;
 import labs.models.User;
 import labs.services.PostsService;
 import labs.services.UsersService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,7 @@ public class IndexController {
 			return "redirect:/home";
 		}
 		
+		model.addAttribute("form", new RegistrationForm());
 		return "index";
 	}
 	
@@ -55,11 +58,15 @@ public class IndexController {
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(@RequestParam("login") String login, 
-						   @RequestParam("email") String email, 
-						   @RequestParam("pass") String pass, HttpServletRequest request) {
+	public String register(@Valid RegistrationForm formData, BindingResult bindResult, Model model) {
 		
-		usersService.register(login, email, pass);
+		if(bindResult.hasErrors()) {
+			model.addAttribute("errors", bindResult.getFieldErrors());
+			model.addAttribute("form", formData);
+			return "index";
+		}
+		
+		usersService.register(formData.getLogin(), formData.getEmail(), formData.getPass());
 
 		return "redirect:/home";
 	}

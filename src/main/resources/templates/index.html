@@ -10,18 +10,42 @@
 		<div class="row">
 			<div class="col-xs-4 col-xs-offset-4">
 				<form method="POST" action="/register">
+					<div class="alert alert-danger" role="alert" th:if="${errors != null}">
+					  <span th:each="err: ${errors}">
+					  	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					  	<span th:text="${err.field}"></span> 
+					  	<span th:text="${err.defaultMessage}">Enter a valid email address</span>
+					  	<br/>
+					  </span>
+					</div>
+				
 					<div class="form-group">
 						<label for="reg-login">Логін</label>
-						<input class="form-control" type="text" name="login" id="reg-login"></input>
+						<input class="form-control" type="text" name="login" id="reg-login" th:value="${form.login}"></input>
 					</div>
 					<div class="form-group">
 						<label for="reg-email">Пошта</label>
-						<input class="form-control" type="text" name="email" id="reg-email"></input>
+						<input class="form-control" type="text" name="email" id="reg-email" th:value="${form.email}"></input>
 					</div>
 					<div class="form-group">
 						<label for="post-text">Пароль</label>
 						<input class="form-control" type="password" name="pass" id="post-text"></input>
 					</div>
+					
+					<div class="form-group">
+						<label for="post-text">Вік</label>
+						<input class="form-control" type="age" name="pass" id="post-text" th:value="${form.age}"></input>
+					</div>
+					
+					<div class="form-group">
+						<label for="post-text">Країна</label>
+						<select class="form-control" name="country">
+							<option value="ua" th:selected="${'ua'.equals(form.country)}">Україна</option>
+							<option value="by" th:selected="${'by'.equals(form.country)}">Білорусь</option>
+							<option value="pl" th:selected="${'pl'.equals(form.country)}">Польща</option>
+						</select>						
+					</div>
+					
 					<button type="submit" class="btn btn-success">Зареєструватись</button>
 					<a href="/login" class="pull-right btn btn-link">Вхід</a>
 				</form>
