@@ -42,7 +42,7 @@ public class User {
   
   @NotBlank
   @Size(min = 1, max = 100)
-  private String passHash;
+  private String password;
   
   @OneToMany(mappedBy = "author")
   private List<Post> posts = new ArrayList<>();
@@ -476,7 +476,7 @@ public class UsersService {
   @Index(columnList="login", unique = true), 
   @Index(columnList="email", unique = true)
 })
-public class User implements UserDetails { ... }
+public class User { ... }
 ```
 
 Робочий код для даного етапу розробки можна знайти за [посиланням](https://github.com/sergkh/vntu-web-mblog/tree/1b0d04aaca04a13c88f84c824e3ccf5f66c3b055).
