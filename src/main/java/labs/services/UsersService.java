@@ -22,14 +22,14 @@ public class UsersService {
 	@PostConstruct
 	@Transactional
 	public void createAdminUser() {		
-		register("admin", "admin@mail.com", "qwerty");
+		register("admin", "admin@mail.com", 40, "ua", "qwerty");
 	}
 	
 	@Transactional(readOnly = false)
-	public void register(String login, String email, String pass) {
+	public void register(String login, String email, int age, String country, String pass) {
 		String passHash = new BCryptPasswordEncoder().encode(pass);
 		
-		User u = new User(login, email.toLowerCase(), passHash);
+		User u = new User(login, email.toLowerCase(), age, country, passHash);
 
 		// підпишемо користувача на самого себе
 		u.getSubscriptions().add(u);

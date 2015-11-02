@@ -66,7 +66,11 @@ public class IndexController {
 			return "index";
 		}
 		
-		usersService.register(formData.getLogin(), formData.getEmail(), formData.getPass());
+		usersService.register(formData.getLogin(), 
+							  formData.getEmail(),
+							  formData.getAge(),
+							  formData.getCountry(),
+						  	  formData.getPass());
 
 		return "redirect:/home";
 	}
