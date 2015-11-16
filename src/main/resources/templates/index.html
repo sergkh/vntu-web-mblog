@@ -6,11 +6,48 @@
   </head>
   <body>
 
+	<script type="text/javascript">
+		function validateRegistration(form) {
+			var hasErrors = false;
+			var errorText = '';
+			
+			var login = form['login'].value;
+			if (login.length < 6) {
+				errorText += 'Login must have at least 6 symbols<br>';
+				hasErrors = true;
+			}
+			
+			var email = form['email'].value;
+			if (!email.match(/[a-z][a-z\._-]*@[a-z]+.[a-z]{2,4}/i)) {
+				errorText += 'Email is not valid<br>';
+				hasErrors = true;
+			}
+			
+			var password = form['pass'].value;
+			if(password.length < 6) {
+				errorText += 'Password is too short<br>';
+				hasErrors = true;
+			}
+			
+			var age = parseInt(form['age'].value);
+			if (isNaN(age) || age < 16) {
+				errorText += 'You have to be at least 16 y.o.<br>';
+				hasErrors = true;
+			}
+			
+			// div with errors
+			var errorsDiv = form.firstElementChild; 
+			errorsDiv.innerHTML = errorText;
+			errorsDiv.className = hasErrors ? 'alert alert-danger' : 'alert alert-danger hidden';
+			return !hasErrors;
+		}
+	</script>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-4 col-xs-offset-4">
-				<form method="POST" action="/register">
-					<div class="alert alert-danger" role="alert" th:if="${errors != null}">
+				<form method="POST" action="/register" onsubmit="return validateRegistration(this);">
+					<div class="alert alert-danger hidden" role="alert" >
 					  <span th:each="err: ${errors}">
 					  	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					  	<span th:text="${err.field}"></span> 
