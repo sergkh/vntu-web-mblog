@@ -85,5 +85,4 @@ public class IndexController {
 		usersService.subscribe(login);
 		return "redirect:home";
 	}
-	
 }

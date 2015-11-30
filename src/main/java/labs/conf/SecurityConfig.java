@@ -21,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.authorizeRequests()
-            .antMatchers("/", "/register").permitAll() // дозволити анонімним користувачам заходити на '/' 
+            .antMatchers("/", "/register", "/exists", "/js/**").permitAll() // дозволити анонімним користувачам заходити на вказані ресурси 
             .anyRequest().authenticated() // всі інші запити потребують аутентифікації
             .and()
         .formLogin()

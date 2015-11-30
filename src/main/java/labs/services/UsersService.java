@@ -63,4 +63,9 @@ public class UsersService {
 		}
 	}
 	
+	@Transactional(readOnly = true)
+	public boolean userExists(String login) {
+		return usersRepo.findByLogin(login) != null;
+	}
+	
 }

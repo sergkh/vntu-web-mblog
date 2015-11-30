@@ -3,46 +3,10 @@
   <head>
     <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha256-sHwgyDk4CGNYom267UJX364ewnY4Bh55d53pxP5WDug= sha512-mkkeSf+MM3dyMWg3k9hcAttl7IVHe2BA1o/5xKLl4kBaP0bih7Mzz/DBy4y6cNZCHtE2tPgYBYH/KtEjOQYKxA==" crossorigin="anonymous" />
     <title>Реєстрація</title>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
   </head>
   <body>
-
-	<script type="text/javascript">
-		function validateRegistration(form) {
-			var hasErrors = false;
-			var errorText = '';
-			
-			var login = form['login'].value;
-			if (login.length < 6) {
-				errorText += 'Login must have at least 6 symbols<br>';
-				hasErrors = true;
-			}
-			
-			var email = form['email'].value;
-			if (!email.match(/[a-z][a-z\._-]*@[a-z]+.[a-z]{2,4}/i)) {
-				errorText += 'Email is not valid<br>';
-				hasErrors = true;
-			}
-			
-			var password = form['pass'].value;
-			if(password.length < 6) {
-				errorText += 'Password is too short<br>';
-				hasErrors = true;
-			}
-			
-			var age = parseInt(form['age'].value);
-			if (isNaN(age) || age < 16) {
-				errorText += 'You have to be at least 16 y.o.<br>';
-				hasErrors = true;
-			}
-			
-			// div with errors
-			var errorsDiv = form.firstElementChild; 
-			errorsDiv.innerHTML = errorText;
-			errorsDiv.className = hasErrors ? 'alert alert-danger' : 'alert alert-danger hidden';
-			return !hasErrors;
-		}
-	</script>
-
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-4 col-xs-offset-4">
@@ -58,7 +22,8 @@
 				
 					<div class="form-group">
 						<label for="reg-login">Логін</label>
-						<input class="form-control" type="text" name="login" id="reg-login" th:value="${form.login}"></input>
+						<input class="form-control" type="text" name="login" id="reg-login" th:value="${form.login}" onblur="validateLogin(this)"></input>
+						<span id="loginHelpBlock" class="hidden help-block">Логін вже зайнятий</span>
 					</div>
 					<div class="form-group">
 						<label for="reg-email">Пошта</label>
